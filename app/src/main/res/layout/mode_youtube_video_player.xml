@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentTop="true"
+		android:background="?attr/colorPrimary"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+	<TextView
+		android:id="@+id/footer"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentBottom="true"
+		android:background="@color/scanner_text_background"
+		android:gravity="center"
+		android:text="@string/mode_youtube_videos"
+		android:textColor="@color/scanner_text"
+		android:textSize="@dimen/scanner_text"/>
+
+	<com.google.android.youtube.player.YouTubePlayerView
+		android:id="@+id/youtube_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"/>
+
+	<TextView
+		android:id="@+id/state_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/youtube_view"
+		android:gravity="center_horizontal"
+		android:maxLines="1"
+		android:paddingTop="5dp"
+		android:visibility="gone"/>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/state_text"
+		android:visibility="gone">
+
+		<TextView
+			android:id="@+id/event_log_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="10dp"/>
+
+	</ScrollView>
+
+</RelativeLayout>

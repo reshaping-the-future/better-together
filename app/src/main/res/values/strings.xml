@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Better Together</string>
+	<string name="app_name_short">BT</string>
+	<string name="group_name_youtube">YouTube</string>
+
+	<string name="create_hotspot">Create a hotspot</string>
+	<string name="join_hotspot">Scan a QR code to join a group</string>
+	<string name="host_hotspot">Use your phones to scan this code</string>
+	<string name="connecting_hotspot">Connecting…</string>
+	<string name="choose_mode">Choose what your phone will do</string>
+	<string name="show_join_hotspot">Let another person join this hotspot</string>
+
+	<string name="button_done">Done</string>
+
+	<string name="hint_settings_access">Settings access</string>
+	<string name="hint_enable_settings_access">Please allow Better Together to edit settings.\n\nThis access allows Better Together to connect to other Better Together apps</string>
+	<string name="hint_edit_settings_access">Edit settings access</string>
+	<string name="error_editing_settings">Unable to set up connection - please make sure you grant Better Together permission to edit settings</string>
+
+	<string name="mode_keyboard">Keyboard (testing mode)</string>
+	<string name="mode_text">Text (testing mode)</string>
+	<string name="mode_youtube_videos">YouTube videos</string>
+	<string name="mode_youtube_controls">YouTube controls</string>
+	<string name="mode_youtube_playlist">YouTube playlist</string>
+	<string name="mode_youtube_search">YouTube search</string>
+	<string name="mode_youtube_related_videos">YouTube related videos</string>
+	<string name="mode_youtube_comments">YouTube comments</string>
+
+	<!-- labels for keyboard -->
+	<!--<string name="label_subtype_generic">%s</string>-->
+	<string name="label_settings">Remote control keyboard</string>
+	<string name="label_keyboard">Using remote keyboard</string>
+
+	<!-- settings keys -->
+	<string name="saved_hotspot_url">saved_hotspot_url</string>
+
+	<!-- youtube controls -->
+	<string name="video_play_pause">Play / Pause</string>
+	<string name="video_previous">Previous</string>
+	<string name="video_next">Next</string>
+	<string name="video_play_now">Play now</string>
+	<string name="video_queue">Add to playlist</string>
+	<string name="video_search">Search</string>
+	<string name="video_go">Go</string>
+	<string name="video_thumbnail">Video thumbnail image</string>
+	<string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string> <!-- TODO: improve -->
+
+</resources>

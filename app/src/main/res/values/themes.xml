@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="BetterTogether" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/bettertogether_primary</item>
+		<item name="colorPrimaryDark">@color/bettertogether_primary_dark</item>
+		<item name="colorAccent">@color/bettertogether_accent</item>
+
+		<item name="colorControlNormal">@color/bettertogether_primary</item>
+		<item name="colorControlActivated">@color/bettertogether_primary</item>
+		<item name="colorControlHighlight">@color/bettertogether_primary</item>
+	</style>
+</resources>

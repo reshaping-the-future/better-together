@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="mode_button_height">120dp</dimen>
+	<dimen name="mode_grid_padding">6dp</dimen>
+	<dimen name="scanner_text">20sp</dimen>
+
+	<dimen name="list_item_padding">12dp</dimen>
+</resources>

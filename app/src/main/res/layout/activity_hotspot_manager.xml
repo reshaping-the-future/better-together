@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentTop="true"
+		android:background="?attr/colorPrimary"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+	<TextView
+		android:id="@+id/footer"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentBottom="true"
+		android:background="@color/scanner_text_background"
+		android:gravity="center"
+		android:text="@string/join_hotspot"
+		android:textColor="@color/scanner_text"
+		android:textSize="@dimen/scanner_text"/>
+
+	<com.journeyapps.barcodescanner.CompoundBarcodeView
+		android:id="@+id/barcode_scanner"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@+id/footer"
+		android:layout_below="@+id/toolbar"
+		app:zxing_use_texture_view="true"/>
+
+	<LinearLayout
+		android:id="@+id/create_hotspot_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@id/footer"
+		android:layout_below="@id/toolbar"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:visibility="gone">
+
+		<ImageView
+			android:id="@+id/qr_image"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:contentDescription="@null"/>
+
+	</LinearLayout>
+
+	<GridView
+		android:id="@+id/choose_mode_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@id/footer"
+		android:layout_below="@id/toolbar"
+		android:clipToPadding="false"
+		android:gravity="center"
+		android:horizontalSpacing="@dimen/mode_grid_padding"
+		android:numColumns="auto_fit"
+		android:padding="@dimen/mode_grid_padding"
+		android:scrollbarStyle="outsideOverlay"
+		android:verticalSpacing="@dimen/mode_grid_padding"
+		android:visibility="gone"/>
+
+	<LinearLayout
+		android:id="@+id/connecting_hotspot_progress_indicator"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:orientation="vertical"
+		android:visibility="gone">
+
+		<ProgressBar
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@android:color/transparent"
+			android:indeterminate="true"/>
+
+		<TextView
+			android:id="@+id/connecting_hotspot_progress_update_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginTop="18dp"
+			android:gravity="center_horizontal"
+			android:textSize="18sp"
+			tools:text="Loading..."/>
+
+	</LinearLayout>
+
+</RelativeLayout>

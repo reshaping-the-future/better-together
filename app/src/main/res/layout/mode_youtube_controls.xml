@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentTop="true"
+		android:background="?attr/colorPrimary"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+	<TextView
+		android:id="@+id/footer"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentBottom="true"
+		android:background="@color/scanner_text_background"
+		android:gravity="center"
+		android:text="@string/mode_youtube_controls"
+		android:textColor="@color/scanner_text"
+		android:textSize="@dimen/scanner_text"/>
+
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true">
+
+		<LinearLayout
+			android:id="@+id/playback_controls"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:weightSum="3">
+
+			<ImageButton
+				android:id="@+id/previous_button"
+				android:layout_width="0dp"
+				android:layout_height="100dp"
+				android:layout_weight="1"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/video_previous"
+				android:onClick="handleClick"
+				android:src="@drawable/ic_skip_previous_red_600_48dp"/>
+
+			<ImageButton
+				android:id="@+id/play_pause_button"
+				android:layout_width="0dp"
+				android:layout_height="100dp"
+				android:layout_weight="1"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/video_play_pause"
+				android:onClick="handleClick"
+				android:src="@drawable/ic_play_arrow_red_600_48dp"/>
+
+			<ImageButton
+				android:id="@+id/next_button"
+				android:layout_width="0dp"
+				android:layout_height="100dp"
+				android:layout_weight="1"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/video_next"
+				android:onClick="handleClick"
+				android:src="@drawable/ic_skip_next_red_600_48dp"/>
+
+		</LinearLayout>
+
+		<SeekBar
+			android:id="@+id/video_seek_bar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="40dp"
+			android:paddingBottom="40dp"
+			android:layout_below="@id/playback_controls"
+			android:layout_marginLeft="30dp"
+			android:layout_marginRight="30dp"/>
+	</RelativeLayout>
+
+</RelativeLayout>

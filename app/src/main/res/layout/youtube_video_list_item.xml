@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/list_item_padding">
+
+	<ImageView
+		android:id="@+id/video_thumbnail"
+		android:layout_width="120dp"
+		android:layout_height="90dp"
+		android:layout_alignParentTop="true"
+		android:contentDescription="@string/video_thumbnail"/>
+
+	<TextView
+		android:id="@+id/video_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_marginLeft="@dimen/list_item_padding"
+		android:layout_marginStart="@dimen/list_item_padding"
+		android:layout_toEndOf="@id/video_thumbnail"
+		android:layout_toRightOf="@id/video_thumbnail"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold"
+		tools:text="Video title"/>
+
+	<TextView
+		android:id="@+id/video_channel"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/video_title"
+		android:layout_marginLeft="@dimen/list_item_padding"
+		android:layout_marginStart="@dimen/list_item_padding"
+		android:layout_toEndOf="@id/video_thumbnail"
+		android:layout_toRightOf="@id/video_thumbnail"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		tools:text="Channel name"/>
+
+	<ImageButton
+		android:id="@+id/video_play"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@id/video_thumbnail"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true"
+		android:background="?attr/selectableItemBackground"
+		android:contentDescription="@string/video_play_now"
+		android:src="@drawable/ic_play_arrow_red_600_48dp"/>
+
+	<ImageButton
+		android:id="@+id/video_queue" android:layout_alignParentBottom="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@id/video_thumbnail"
+		android:layout_toLeftOf="@id/video_play"
+		android:layout_toStartOf="@id/video_play"
+		android:background="?attr/selectableItemBackground"
+		android:contentDescription="@string/video_queue"
+		android:src="@drawable/ic_playlist_play_red_600_48dp"/>
+
+</RelativeLayout>

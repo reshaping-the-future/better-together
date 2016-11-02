@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="bettertogether_primary">#e53935</color>
+	<color name="bettertogether_primary_dark">#b71c1c</color>
+	<color name="bettertogether_accent">#3f51b5</color>
+
+	<color name="mode_button_background">#eaeaea</color>
+	<color name="keyboard_text_background">#000000</color>
+	<color name="scanner_text_background">#cc000000</color>
+	<color name="scanner_text">#ccffffff</color>
+</resources>

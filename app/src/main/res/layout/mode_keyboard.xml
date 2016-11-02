@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentTop="true"
+		android:background="?attr/colorPrimary"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+	<EditText
+		android:id="@+id/keyboard_text"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignParentBottom="true"
+		android:layout_below="@id/toolbar"
+		android:clickable="false"
+		android:cursorVisible="false"
+		android:imeOptions="flagNoExtractUi"
+		android:longClickable="false"
+		android:scrollbars="vertical"/>
+
+	<!-- footer intentionally after keyboard to hide input area -->
+	<TextView
+		android:id="@+id/footer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignParentBottom="true"
+		android:layout_below="@id/toolbar"
+		android:background="@color/keyboard_text_background"
+		android:gravity="center"
+		android:text="@string/mode_keyboard"
+		android:textColor="@color/scanner_text"
+		android:textSize="@dimen/scanner_text"/>
+
+</RelativeLayout>
