@@ -18,17 +18,16 @@
 
 # ---------------------------------------------
 # make sure we keep the serializable BroadcastMessage objects between builds
-# TODO: RE_ENABLE AFTER TRIAL TO ENSURE PROGUARD DOESN'T BREAK BROADCASTMESSAGES
-#-keepnames class * implements java.io.Serializable
-#-keepclassmembers class * implements java.io.Serializable {
-#    static final long serialVersionUID;
-#    private static final java.io.ObjectStreamField[] serialPersistentFields;
-#    !static !transient <fields>;
-#    private void writeObject(java.io.ObjectOutputStream);
-#    private void readObject(java.io.ObjectInputStream);
-#    java.lang.Object writeReplace();
-#    java.lang.Object readResolve();
-#}
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
 
 # ---------------------------------------------
 ## New rules for EventBus 3.0.x ##
@@ -49,17 +48,5 @@
 -keepattributes SourceFile,LineNumberTable
 
 # ---------------------------------------------
-# play services (only used for analytics) (http://developer.android.com/google/play-services/setup.html)
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
-}
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-    public static final *** NULL;
-}
--keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames class * {
-    @com.google.android.gms.common.annotation.KeepName *;
-}
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
-}
+# for Fast Android Networking library
+-dontwarn okio.**
