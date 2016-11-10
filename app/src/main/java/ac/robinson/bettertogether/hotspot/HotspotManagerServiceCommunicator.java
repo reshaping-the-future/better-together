@@ -129,6 +129,7 @@ public class HotspotManagerServiceCommunicator {
 
 	// connect to the service
 	public void bindService(Context context) {
+		context.startService(new Intent(context, HotspotManagerService.class));
 		context.bindService(new Intent(context, HotspotManagerService.class), mConnection, Context.BIND_AUTO_CREATE);
 		mIsBound = true;
 	}

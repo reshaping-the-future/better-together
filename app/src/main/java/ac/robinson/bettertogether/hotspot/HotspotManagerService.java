@@ -645,7 +645,7 @@ public class HotspotManagerService extends Service {
 						WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
 						if (wifiInfo != null) {
 							networkName2 = trimQuotes(wifiInfo.getSSID());
-							isConnected = true;
+							// isConnected = true; // not necessarily the case - could be connecting
 						}
 						Log.d(TAG, "(State change for network: " + networkName1 + " / " + networkName2 + "); connected: " +
 								isConnected);
