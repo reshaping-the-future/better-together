@@ -1,4 +1,6 @@
 # Better Together
+![Setting up Better Together connections](https://lh3.googleusercontent.com/SXNCa20gV-vtXCQxKjE5f3xeyZD91O4XeRKcWxXXeMd1Fz9eEPbgAXoleKrTRTrJZaTc=s511 "Setting up Better Together connections") ![Better Together video plugin](https://lh3.googleusercontent.com/5KMgNkDFQxVwAHQeJMRF_v6zMRiTdVyKbsxRTZsyL6nKEZZkmIQc2lNvFRT60y51wr0=s511 "Better Together video plugin") ![Better Together shopping plugin](https://lh3.googleusercontent.com/o_70DJJvN3xUBl4kDkNJchyUA78X37zvFmhok2c14kcqdUI6cM3jwMAFe1b9cqRSpQ=s511 "Better Together shopping plugin")
+
 Better Together is a platform for flexibly connecting multiple smartphones together to separate common tasks. Better Together helps you connect phones together to share, help and work with other people.
 
 Plugins for Better Together let you split other services or apps into separate parts on different phones.
