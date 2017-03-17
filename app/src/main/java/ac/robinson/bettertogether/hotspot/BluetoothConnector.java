@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 The Better Together Toolkit
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ac.robinson.bettertogether.hotspot;
 
 import android.annotation.SuppressLint;
@@ -10,8 +26,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-// based on: https://github.com/arissa34/Android-Multi-Bluetooth-Library (license: "beer-ware")
-public class BluetoothConnector {
+// inspired by: https://github.com/arissa34/Android-Multi-Bluetooth-Library (license: "beer-ware")
+class BluetoothConnector {
 
 	private static final String TAG = "BluetoothConnector";
 
@@ -21,14 +37,15 @@ public class BluetoothConnector {
 	private boolean mPreferSecureConnection;
 	private UUID mUuid;
 
-	public BluetoothConnector(BluetoothDevice device, boolean preferSecureConnection, UUID uuid) {
+	BluetoothConnector(BluetoothDevice device, boolean preferSecureConnection, UUID uuid) {
 		mBluetoothDevice = device;
 		mPreferSecureConnection = preferSecureConnection;
 		mUuid = uuid;
 	}
 
-	@SuppressLint("NewApi") // we *do* check the api level for createInsecureRfcommSocketToServiceRecord
-	public BluetoothSocketWrapper connect() throws IOException {
+	@SuppressLint("NewApi")
+		// we *do* check the api level for createInsecureRfcommSocketToServiceRecord
+	BluetoothSocketWrapper connect() throws IOException {
 		BluetoothSocket socket;
 		if (mPreferSecureConnection || Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
 			socket = mBluetoothDevice.createRfcommSocketToServiceRecord(mUuid);
@@ -61,7 +78,7 @@ public class BluetoothConnector {
 		throw new IOException();
 	}
 
-	public void close() {
+	void close() {
 		if (mBluetoothSocket != null) {
 			try {
 				mBluetoothSocket.close();
@@ -70,7 +87,7 @@ public class BluetoothConnector {
 		}
 	}
 
-	public interface BluetoothSocketWrapper {
+	interface BluetoothSocketWrapper {
 		void connect() throws IOException;
 
 		void close() throws IOException;
@@ -78,10 +95,10 @@ public class BluetoothConnector {
 		BluetoothSocket getUnderlyingSocket();
 	}
 
-	public static class NativeBluetoothSocket implements BluetoothSocketWrapper {
+	static class NativeBluetoothSocket implements BluetoothSocketWrapper {
 		private BluetoothSocket mSocket;
 
-		public NativeBluetoothSocket(BluetoothSocket socket) {
+		NativeBluetoothSocket(BluetoothSocket socket) {
 			mSocket = socket;
 		}
 
@@ -101,10 +118,10 @@ public class BluetoothConnector {
 		}
 	}
 
-	public class FallbackBluetoothSocket extends NativeBluetoothSocket {
+	private class FallbackBluetoothSocket extends NativeBluetoothSocket {
 		private BluetoothSocket mFallbackSocket;
 
-		public FallbackBluetoothSocket(BluetoothSocket socket) throws FallbackException {
+		FallbackBluetoothSocket(BluetoothSocket socket) throws FallbackException {
 			super(socket);
 			try {
 				Class<?> cls = socket.getRemoteDevice().getClass();
@@ -128,12 +145,11 @@ public class BluetoothConnector {
 		}
 	}
 
-	public static class FallbackException extends Exception {
+	private static class FallbackException extends Exception {
 		private static final long serialVersionUID = 1;
 
-		public FallbackException(Exception e) {
+		FallbackException(Exception e) {
 			super(e);
 		}
-
 	}
 }

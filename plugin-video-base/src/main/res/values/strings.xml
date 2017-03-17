@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 The Better Together Toolkit
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<resources>
+	<string name="video_plugin_name">Better Together plugin: Video Player</string>
+
+	<string name="mode_youtube_videos">Video player</string>
+	<string name="mode_youtube_controls">Controls</string>
+	<string name="mode_youtube_playlist">Playlist</string>
+	<string name="mode_youtube_search">Search</string>
+	<string name="mode_youtube_related_videos">Related videos</string>
+	<string name="mode_youtube_comments">Comments</string>
+
+	<!-- youtube controls -->
+	<string name="video_play_pause">Play / Pause</string>
+	<string name="video_previous">Previous</string>
+	<string name="video_next">Next</string>
+	<string name="video_play_now">Play now</string>
+	<string name="video_queue">Add to playlist</string>
+	<string name="video_search">Search</string>
+	<string name="video_go">Go</string>
+	<string name="video_thumbnail">Video thumbnail image</string>
+	<string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string> <!-- TODO: improve -->
+
+</resources>

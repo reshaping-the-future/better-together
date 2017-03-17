@@ -1,23 +1,49 @@
+/*
+ * Copyright (C) 2017 The Better Together Toolkit
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ac.robinson.bettertogether.hotspot;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.WindowManager;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
-import ac.robinson.bettertogether.HotspotManagerActivity;
+import java.util.Map;
+
+import ac.robinson.bettertogether.PluginHostActivity;
 import ac.robinson.bettertogether.R;
-import ac.robinson.bettertogether.event.BroadcastMessage;
+import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
+import ac.robinson.bettertogether.api.messaging.PluginIntent;
+import ac.robinson.bettertogether.host.Plugin;
+import ac.robinson.bettertogether.host.PluginFinder;
 
 public abstract class BaseHotspotActivity extends AppCompatActivity implements HotspotManagerServiceCommunicator
 		.HotspotServiceCallback {
 
-	public static final String HOTSPOT_URL = "hotspot_url";
+	private static final String TAG = "BaseHotspotActivity";
+
+	private static final String HOTSPOT_URL = "hotspot_url";
 
 	private HotspotManagerServiceCommunicator mServiceCommunicator;
+
 	private String mHotspotUrl;
 
 	@Override
@@ -25,6 +51,15 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 		super.onCreate(savedInstanceState);
 		mServiceCommunicator = new HotspotManagerServiceCommunicator(BaseHotspotActivity.this);
 		mServiceCommunicator.bindService(BaseHotspotActivity.this);
+
+		// track package (apk) add/remove events to update plugins
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+		intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+		intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+		intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+		intentFilter.addDataScheme("package");
+		registerReceiver(mPackageEventReceiver, intentFilter);
 
 		if (savedInstanceState != null) {
 			mHotspotUrl = savedInstanceState.getString("mHotspotUrl");
@@ -34,19 +69,84 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 				mHotspotUrl = extras.getString(HOTSPOT_URL);
 			}
 		}
+
+		sendSystemMessage(HotspotManagerService.MSG_REQUEST_STATUS, null); // check we haven't missed a connect/disconnect msg
 	}
 
-	protected void initialiseViewAndToolbar(int layout, boolean keepScreenOn) {
-		if (keepScreenOn) {
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}
+	private BroadcastReceiver mPackageEventReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			switch (action) {
+				case Intent.ACTION_PACKAGE_ADDED: // TODO: do we get both REPLACED and ADDED when replacing?
+				case Intent.ACTION_PACKAGE_CHANGED:
+				case Intent.ACTION_PACKAGE_REPLACED:
+				case Intent.ACTION_PACKAGE_REMOVED:
+					// Log.d(TAG, "Package change" + intent.getDataString());
+					String pluginPackage = intent.getDataString();
+					if (!TextUtils.isEmpty(pluginPackage)) {
+						pluginPackage = pluginPackage.replace("package:", "").trim();
+						if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+							// always update on removal - we can't tell if it is a valid package without maintaining a cached
+							// list of plugins (as it no-longer exists for discovery after removal)
+							pluginUpdated(pluginPackage);
+						} else {
+							Map<String, Plugin> plugins = PluginFinder.getValidPlugins(BaseHotspotActivity.this, pluginPackage);
+							if (plugins.containsKey(pluginPackage)) {
+								// the updated package is a valid plugin - update our lists - note that this will not work for
+								// inbuilt plugins, as their keys don't match the package name... but we never get add/remove
+								// events for them, so this is ok
+								pluginUpdated(pluginPackage);
+							}
+						}
+					}
+					break;
 
-		setContentView(layout);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
+				default:
+					break;
+			}
+		}
+	};
+
+	protected void pluginUpdated(String pluginPackage) {
+		// nothing to do here, but subclassing activities may need to update
+	}
+
+	protected void launchPluginAndFinish(String hotspotUrl, boolean isInternalPlugin) {
+		Log.d(TAG, "Launching plugin: " + hotspotUrl);
+
+		Intent intent = new Intent(BaseHotspotActivity.this, PluginHostActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra(PluginHostActivity.EXTRA_HOTSPOT_URL, hotspotUrl);
+
+		try {
+			ConnectionOptions currentConnectionOptions = null;
+			boolean validatedInternalPlugin = isInternalPlugin;
+			if (isInternalPlugin) {
+				currentConnectionOptions = ConnectionOptions.fromHotspotUrl(hotspotUrl);
+				if (currentConnectionOptions != null) {
+					currentConnectionOptions.mPluginPackage = PluginIntent.HOST_PACKAGE;
+				} else {
+					validatedInternalPlugin = false; // TODO: can we do anything better?
+				}
+			}
+
+			sendSystemMessage(HotspotManagerService.MSG_UPDATE_HOTSPOT, validatedInternalPlugin ? currentConnectionOptions
+					.getHotspotUrl() : hotspotUrl); // update plugin package in service - for inbuilt plugins need host package
+			startActivity(intent);
+			finish(); // TODO: on slower devices do we need to wait until the new activity is definitely connected before this?
+		} catch (Exception ignored) {
+			Toast.makeText(BaseHotspotActivity.this, R.string.hint_error_launching_plugin, Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	protected void launchGetPluginsActivity() {
+		Intent intent = new Intent(Intent.ACTION_VIEW, PluginIntent.MARKET_PLUGIN_SEARCH);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		try {
+			startActivity(intent);
+		} catch (Exception ignored) {
+			Toast.makeText(BaseHotspotActivity.this, R.string.hint_error_launching_play_store, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -67,52 +167,22 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		unregisterReceiver(mPackageEventReceiver);
 		if (mServiceCommunicator != null) {
 			mServiceCommunicator.unbindService(BaseHotspotActivity.this, !isFinishing());  // don't kill service on rotation
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (mHotspotUrl != null) {
-			getMenuInflater().inflate(R.menu.menu_mode, menu);
-		}
-		return super.onCreateOptionsMenu(menu);
+	protected void sendSystemMessage(int type, String data) {
+		mServiceCommunicator.sendSystemMessage(type, data);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				// NavUtils.navigateUpFromSameTask(BaseHotspotActivity.this); // only API 16+; requires manifest tag
-				finish();
-				return true;
-
-			case R.id.action_show_qr_code: // every mode activity can help others join the group
-				if (mHotspotUrl != null) {
-					HotspotManagerActivity.showQRDialog(BaseHotspotActivity.this, mHotspotUrl);
-					sendBroadcastMessage(new BroadcastMessage(BroadcastMessage.Type.INTERNAL, HotspotManagerService
-							.INTERNAL_BROADCAST_EVENT_SHOW_QR_CODE));
-				}
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
+	public void onSystemMessageReceived(int type, String data) {
+		// nothing to do here - overriding activities may need to finish() or update UI on some system messages
 	}
 
-	public void sendServiceMessage(int type, String data) {
-		mServiceCommunicator.sendServiceMessage(type, data);
-	}
-
-	@Override
-	public void onServiceMessageReceived(int type, String data) {
-		switch (type) {
-			case HotspotManagerService.EVENT_LOCAL_CLIENT_ERROR:
-				finish(); // our connection to the server failed - need to reconnect from manager activity
-				break;
-		}
-	}
-
-	public void sendBroadcastMessage(BroadcastMessage message) {
+	protected void sendBroadcastMessage(BroadcastMessage message) {
 		mServiceCommunicator.sendBroadcastMessage(message);
 	}
 

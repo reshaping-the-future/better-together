@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 25
+        versionCode 1
+        versionName '1.0'
+        consumerProguardFiles 'proguard-rules.pro'
+        resConfigs 'en'
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
+
+    compile 'jp.wasabeef:recyclerview-animators:2.0.0' // for animating adding/removing RecyclerView items
+
+    compile 'ac.robinson.bettertogether:api:1.0.0' // the Better Together communication API
+}

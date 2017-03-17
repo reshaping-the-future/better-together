@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 The Better Together Toolkit
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentTop="true"
+		android:background="?attr/colorPrimary"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+	<TextView
+		android:id="@+id/footer_text_closed"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentBottom="true"
+		android:background="@color/bettertogether_primary"
+		android:gravity="center"
+		android:onClick="handleClick"
+		android:text="@string/change_plugin_closed"
+		android:textColor="@color/bettertogether_text_light"
+		android:textSize="@dimen/scanner_text_size"/>
+
+	<LinearLayout
+		android:id="@+id/footer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:orientation="vertical"
+		android:visibility="gone">
+
+		<TextView
+			android:id="@+id/footer_text_open"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="@color/bettertogether_primary"
+			android:gravity="center"
+			android:onClick="handleClick"
+			android:text="@string/change_plugin_open"
+			android:textColor="@color/bettertogether_text_light"
+			android:textSize="@dimen/scanner_text_size"/>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/plugin_view"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/bettertogether_background_light"
+			android:clipToPadding="false"
+			android:paddingBottom="8dp"
+			android:paddingEnd="8dp"
+			android:paddingLeft="0dp"
+			android:paddingRight="8dp"
+			android:paddingStart="0dp"
+			android:paddingTop="8dp"/>
+
+	</LinearLayout>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/plugin_activities_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_above="@id/footer_text_closed"
+		android:layout_below="@id/toolbar"
+		android:clipToPadding="false"
+		android:paddingBottom="8dp"
+		android:paddingEnd="8dp"
+		android:paddingLeft="0dp"
+		android:paddingRight="8dp"
+		android:paddingStart="0dp"
+		android:paddingTop="0dp"/>
+
+</RelativeLayout>

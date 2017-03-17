@@ -16,17 +16,18 @@
 #   public *;
 #}
 
-# ---------------------------------------------
-# make sure we keep the serializable BroadcastMessage objects between builds
--keepnames class * implements java.io.Serializable
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    !static !transient <fields>;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+
+# remove debug and verbose log messages
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
 }
 
 # ---------------------------------------------
@@ -42,11 +43,3 @@
 #-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
 #    <init>(java.lang.Throwable);
 #}
-
-# ---------------------------------------------
-# for better crash reports (http://support.crashlytics.com/knowledgebase/articles/202143-eclipse-and-proguard)
--keepattributes SourceFile,LineNumberTable
-
-# ---------------------------------------------
-# for Fast Android Networking library
--dontwarn okio.**

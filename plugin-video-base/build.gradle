@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 25
+        versionCode 1
+        versionName '1.0'
+        consumerProguardFiles 'proguard-rules.pro'
+        resConfigs 'en'
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.3.0'
+
+    compile 'com.amitshekhar.android:android-networking:0.4.0' // for http requests (built on OKHttp)
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    // compile 'com.google.apis:google-api-services-youtube:v3-rev164-1.21.0' // much larger resulting APK size than .jar above
+
+    compile 'ac.robinson.bettertogether:api:1.0.0' // the Better Together communication API
+}

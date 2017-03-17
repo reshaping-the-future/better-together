@@ -4,6 +4,12 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/better-together.iml" filepath="$PROJECT_DIR$/better-together.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin-book/plugin-book.iml" filepath="$PROJECT_DIR$/plugin-book/plugin-book.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin-game/plugin-game.iml" filepath="$PROJECT_DIR$/plugin-game/plugin-game.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin-shopping/plugin-shopping.iml" filepath="$PROJECT_DIR$/plugin-shopping/plugin-shopping.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin-shopping-base/plugin-shopping-base.iml" filepath="$PROJECT_DIR$/plugin-shopping-base/plugin-shopping-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin-video/plugin-video.iml" filepath="$PROJECT_DIR$/plugin-video/plugin-video.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugin-video-base/plugin-video-base.iml" filepath="$PROJECT_DIR$/plugin-video-base/plugin-video-base.iml" />
     </modules>
   </component>
 </project>

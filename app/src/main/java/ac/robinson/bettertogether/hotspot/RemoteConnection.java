@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 The Better Together Toolkit
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ac.robinson.bettertogether.hotspot;
 
 import android.util.Log;
@@ -8,29 +24,34 @@ import java.io.Closeable;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
-import ac.robinson.bettertogether.event.BroadcastMessage;
+import ac.robinson.bettertogether.BetterTogetherUtils;
+import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.event.ClientMessageErrorEvent;
 import ac.robinson.bettertogether.event.EventType;
 import ac.robinson.bettertogether.event.MessageReceivedEvent;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public abstract class RemoteConnection implements Runnable {
+abstract class RemoteConnection implements Runnable {
 
-	// all remote connections (WiFi and Bluetooth) extend this class, sharing the same list of message parts
+	// all remote connections (Wifi and Bluetooth) extend this class, sharing the same list of message parts
 	private static HashMap<String, String> sMessageParts = new HashMap<>();
 	private String TAG;
 
-	protected void setLogTag(String logTag) {
+	void setLogTag(String logTag) {
 		TAG = logTag;
 	}
 
-	protected boolean sendMessage(OutputStreamWriter streamWriter, String message) {
+	@SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+	boolean sendMessage(OutputStreamWriter streamWriter, String message) {
 		try {
 			if (streamWriter != null) {
 				String formatString = "%0" + HotspotManagerService.MESSAGE_PART_COUNT_SIZE + "d";
 				if (message.length() < HotspotManagerService.MESSAGE_PAYLOAD_SIZE) {
-					streamWriter.write(HotspotManagerService.getRandomShortUUID() + String.format(formatString, 1) + String
-							.format(formatString, 0) + message + HotspotManagerService.MESSAGE_DELIMITER_STRING);
+					streamWriter.write(BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE) + String
+							.format(formatString, 1) + String.format(Locale.US, formatString, 0) + message +
+							HotspotManagerService.MESSAGE_DELIMITER_STRING);
 					streamWriter.flush();
 					return true;
 				} else {
@@ -39,12 +60,12 @@ public abstract class RemoteConnection implements Runnable {
 					int totalParts = messageParts.size();
 					int partSizeLimit = (int) Math.pow(10, HotspotManagerService.MESSAGE_PART_COUNT_SIZE) - 1;
 					if (totalParts < partSizeLimit) {
-						String totalPartsString = String.format(formatString, totalParts);
-						String messageId = HotspotManagerService.getRandomShortUUID();
+						String totalPartsString = String.format(Locale.US, formatString, totalParts);
+						String messageId = BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE);
 						int partNumber = 0;
 						for (String part : messageParts) {
-							streamWriter.write(messageId + totalPartsString + String.format(formatString, partNumber) + part +
-									HotspotManagerService.MESSAGE_DELIMITER_STRING);
+							streamWriter.write(messageId + totalPartsString + String.format(Locale.US, formatString, partNumber)
+									+ part + HotspotManagerService.MESSAGE_DELIMITER_STRING);
 							partNumber += 1;
 						}
 						streamWriter.flush();
@@ -55,31 +76,32 @@ public abstract class RemoteConnection implements Runnable {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			Log.e(TAG, "Error sending message: " + e.getLocalizedMessage());
 			EventBus.getDefault().post(new ClientMessageErrorEvent(EventType.Type.UNKNOWN));
 		}
 		return false;
 	}
 
-	protected void processBytes(String connectionId, byte[] buffer, int bytesRead, StringBuilder stringBuilder) {
+	void processBytes(String connectionId, byte[] buffer, int bytesRead, StringBuilder stringBuilder) {
 		if (bytesRead != -1) {
 			int bufferStart = 0;
 			for (int i = 0; i < bytesRead; i += 1) {
 				if (buffer[i] == HotspotManagerService.MESSAGE_DELIMITER_BYTE) {
-					stringBuilder.append(new String(buffer, bufferStart, i - bufferStart));
+					stringBuilder.append(new String(buffer, bufferStart, i - bufferStart, BroadcastMessage.CHARSET));
 					receiveMessage(connectionId, stringBuilder.toString());
 					bufferStart = i + 1;
 					stringBuilder.setLength(0);
 				}
 			}
 			if (bufferStart < bytesRead) {
-				stringBuilder.append(new String(buffer, bufferStart, bytesRead - bufferStart));
+				stringBuilder.append(new String(buffer, bufferStart, bytesRead - bufferStart, BroadcastMessage.CHARSET));
 			}
 		}
 	}
 
 	// messages are split into parts if they are larger than the buffer - here we recombine
-	protected void receiveMessage(String connectionId, String message) {
+	private void receiveMessage(String connectionId, String message) {
 		int partCountSize = HotspotManagerService.MESSAGE_ID_SIZE + HotspotManagerService.MESSAGE_PART_COUNT_SIZE;
 		if (message.length() > HotspotManagerService.MESSAGE_HEADER_SIZE) {
 			try {
@@ -108,7 +130,7 @@ public abstract class RemoteConnection implements Runnable {
 		}
 	}
 
-	protected void closeConnection(Closeable connection) {
+	void closeConnection(Closeable connection) {
 		if (connection != null) {
 			try {
 				connection.close();

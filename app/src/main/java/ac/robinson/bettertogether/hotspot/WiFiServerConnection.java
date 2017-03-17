@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 The Better Together Toolkit
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ac.robinson.bettertogether.hotspot;
 
 import android.os.Build;
@@ -9,11 +25,12 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.event.EventType;
-import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
 import ac.robinson.bettertogether.event.ServerConnectionSuccessEvent;
+import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
 
-public class WiFiServerConnection extends RemoteConnection {
+class WifiServerConnection extends RemoteConnection {
 
 	private static final String TAG = "WifiServerConnection";
 
@@ -24,7 +41,7 @@ public class WiFiServerConnection extends RemoteConnection {
 	private InputStream mInputStream;
 	private OutputStreamWriter mOutputStreamWriter;
 
-	public WiFiServerConnection(String id, Socket socket) {
+	WifiServerConnection(String id, Socket socket) {
 		mId = id;
 		mSocket = socket;
 	}
@@ -33,11 +50,11 @@ public class WiFiServerConnection extends RemoteConnection {
 	public void run() {
 		mRunning = true;
 		try {
-			Log.d(TAG, "WiFi server connected to client");
+			Log.d(TAG, "Wifi server connected to client");
 			EventBus.getDefault().post(new ServerConnectionSuccessEvent(EventType.Type.WIFI));
 
 			mInputStream = mSocket.getInputStream();
-			mOutputStreamWriter = new OutputStreamWriter(mSocket.getOutputStream());
+			mOutputStreamWriter = new OutputStreamWriter(mSocket.getOutputStream(), BroadcastMessage.CHARSET);
 
 			int bufferSize = HotspotManagerService.MESSAGE_BUFFER_SIZE;
 			byte[] buffer = new byte[bufferSize];
@@ -50,16 +67,16 @@ public class WiFiServerConnection extends RemoteConnection {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.e(TAG, "WiFi server connection error: " + e.getLocalizedMessage());
+			Log.e(TAG, "Wifi server connection error: " + e.getLocalizedMessage());
 			EventBus.getDefault().post(new ServerMessageErrorEvent(EventType.Type.WIFI));
 		}
 	}
 
-	public boolean sendMessage(String message) {
+	boolean sendMessage(String message) {
 		return sendMessage(mOutputStreamWriter, message);
 	}
 
-	public void closeConnection() {
+	void closeConnection() {
 		mRunning = false;
 		closeConnection(mInputStream);
 		mInputStream = null;

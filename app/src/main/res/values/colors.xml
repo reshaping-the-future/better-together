@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<color name="bettertogether_primary">#e53935</color>
-	<color name="bettertogether_primary_dark">#b71c1c</color>
-	<color name="bettertogether_accent">#3f51b5</color>
+<!--
+  ~ Copyright (C) 2017 The Better Together Toolkit
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
 
-	<color name="mode_button_background">#eaeaea</color>
-	<color name="keyboard_text_background">#000000</color>
-	<color name="scanner_text_background">#cc000000</color>
-	<color name="scanner_text">#ccffffff</color>
+<resources>
+	<color name="bettertogether_primary">#97c53c</color>
+	<color name="bettertogether_primary_dark">#7fa632</color>
+	<color name="bettertogether_accent">#00e676</color>
+	<color name="bettertogether_background_light">#dcedc8</color>
+
+	<color name="bettertogether_text">#3b6c36</color>
+	<color name="bettertogether_text_light">#ccffffff</color>
 </resources>

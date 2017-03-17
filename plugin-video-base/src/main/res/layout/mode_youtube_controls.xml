@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 The Better Together Toolkit
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentTop="true"
+		android:background="?attr/colorPrimary"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true">
+
+		<LinearLayout
+			android:id="@+id/playback_controls"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:weightSum="3">
+
+			<ImageButton
+				android:id="@+id/previous_button"
+				android:layout_width="0dp"
+				android:layout_height="100dp"
+				android:layout_weight="1"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/video_previous"
+				android:onClick="handleClick"
+				android:src="@drawable/ic_skip_previous_red_800_48dp"/>
+
+			<ImageButton
+				android:id="@+id/play_pause_button"
+				android:layout_width="0dp"
+				android:layout_height="100dp"
+				android:layout_weight="1"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/video_play_pause"
+				android:onClick="handleClick"
+				android:src="@drawable/ic_play_arrow_red_800_48dp"/>
+
+			<ImageButton
+				android:id="@+id/next_button"
+				android:layout_width="0dp"
+				android:layout_height="100dp"
+				android:layout_weight="1"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/video_next"
+				android:onClick="handleClick"
+				android:src="@drawable/ic_skip_next_red_800_48dp"/>
+
+		</LinearLayout>
+
+		<SeekBar
+			android:id="@+id/video_seek_bar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="40dp"
+			android:paddingBottom="40dp"
+			android:layout_below="@id/playback_controls"
+			android:layout_marginLeft="30dp"
+			android:layout_marginRight="30dp"/>
+	</RelativeLayout>
+
+</RelativeLayout>

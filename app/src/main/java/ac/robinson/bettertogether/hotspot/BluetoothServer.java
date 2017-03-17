@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 The Better Together Toolkit
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ac.robinson.bettertogether.hotspot;
 
 import android.bluetooth.BluetoothAdapter;
@@ -10,12 +26,15 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import ac.robinson.bettertogether.BetterTogetherUtils;
 import ac.robinson.bettertogether.event.EventType;
 import ac.robinson.bettertogether.event.ServerErrorEvent;
+import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
 
-public class BluetoothServer implements Runnable {
+class BluetoothServer implements Runnable {
 
 	private static final String TAG = "BluetoothServer";
 
@@ -25,7 +44,7 @@ public class BluetoothServer implements Runnable {
 	private BluetoothServerSocket mServerSocket;
 	private HashMap<String, BluetoothServerConnection> mConnectedSockets = new HashMap<>();
 
-	public BluetoothServer(BluetoothAdapter adapter) {
+	BluetoothServer(BluetoothAdapter adapter) {
 		mBluetoothAdapter = adapter;
 	}
 
@@ -41,7 +60,7 @@ public class BluetoothServer implements Runnable {
 				while (mRunning) {
 					BluetoothSocket acceptedSocket = mServerSocket.accept();
 
-					String newConnectionId = HotspotManagerService.getRandomShortUUID();
+					String newConnectionId = BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE);
 					BluetoothServerConnection connectedServer = new BluetoothServerConnection(newConnectionId, acceptedSocket);
 					new Thread(connectedServer).start();
 					mConnectedSockets.put(newConnectionId, connectedServer);
@@ -57,15 +76,21 @@ public class BluetoothServer implements Runnable {
 		}
 	}
 
-	public void sendMessageToAll(String message, @Nullable String ignoreClient) {
-		for (Map.Entry<String, BluetoothServerConnection> connection : mConnectedSockets.entrySet()) {
+	void sendMessageToAll(String message, @Nullable String ignoreClient) {
+		for (Iterator<Map.Entry<String, BluetoothServerConnection>> connectedSocketsIterator = mConnectedSockets.entrySet()
+				.iterator(); connectedSocketsIterator.hasNext(); ) {
+			Map.Entry<String, BluetoothServerConnection> connection = connectedSocketsIterator.next();
 			if (!connection.getKey().equals(ignoreClient)) { // send to all except the single ignored client
-				connection.getValue().sendMessage(message);
+				if (!connection.getValue().sendMessage(message)) {
+					Log.d(TAG, "Error sending message to client - removing dead client socket");
+					connectedSocketsIterator.remove(); // remove dead connection (client failed)
+					EventBus.getDefault().post(new ServerMessageErrorEvent(EventType.Type.BLUETOOTH));
+				}
 			}
 		}
 	}
 
-	public void closeAllConnections() {
+	void closeAllConnections() {
 		mRunning = false;
 		if (mServerSocket != null) {
 			try {

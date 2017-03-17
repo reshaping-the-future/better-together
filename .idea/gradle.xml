@@ -10,6 +10,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/plugin-book" />
+            <option value="$PROJECT_DIR$/plugin-game" />
+            <option value="$PROJECT_DIR$/plugin-shopping" />
+            <option value="$PROJECT_DIR$/plugin-shopping-base" />
+            <option value="$PROJECT_DIR$/plugin-video" />
+            <option value="$PROJECT_DIR$/plugin-video-base" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

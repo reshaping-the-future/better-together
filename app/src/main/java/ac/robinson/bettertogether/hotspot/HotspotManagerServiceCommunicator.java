@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 The Better Together Toolkit
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package ac.robinson.bettertogether.hotspot;
 
 import android.content.ComponentName;
@@ -14,9 +30,10 @@ import android.os.RemoteException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import ac.robinson.bettertogether.event.BroadcastMessage;
+import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
+import ac.robinson.bettertogether.api.messaging.PluginIntent;
 
-public class HotspotManagerServiceCommunicator {
+class HotspotManagerServiceCommunicator {
 
 	private boolean mIsBound;
 
@@ -26,13 +43,13 @@ public class HotspotManagerServiceCommunicator {
 
 	private ArrayList<Message> mQueuedMessages = new ArrayList<>();
 
-	public interface HotspotServiceCallback {
+	interface HotspotServiceCallback {
 		void onBroadcastMessageReceived(BroadcastMessage message);
 
-		void onServiceMessageReceived(int type, String data);
+		void onSystemMessageReceived(int type, String data);
 	}
 
-	public HotspotManagerServiceCommunicator(HotspotServiceCallback callback) {
+	HotspotManagerServiceCommunicator(HotspotServiceCallback callback) {
 		mMessenger = new Messenger(new IncomingHandler(HotspotManagerServiceCommunicator.this));
 		mCallback = callback;
 	}
@@ -40,7 +57,7 @@ public class HotspotManagerServiceCommunicator {
 	private static class IncomingHandler extends Handler {
 		private final WeakReference<HotspotManagerServiceCommunicator> mCommunicatorReference; // allow garbage collection
 
-		public IncomingHandler(HotspotManagerServiceCommunicator instance) {
+		IncomingHandler(HotspotManagerServiceCommunicator instance) {
 			mCommunicatorReference = new WeakReference<>(instance);
 		}
 
@@ -54,13 +71,13 @@ public class HotspotManagerServiceCommunicator {
 
 			switch (msg.what) {
 				case HotspotManagerService.MSG_BROADCAST:
-					BroadcastMessage message = (BroadcastMessage) msg.getData().getSerializable(HotspotManagerService
+					BroadcastMessage message = (BroadcastMessage) msg.getData().getSerializable(PluginIntent
 							.KEY_BROADCAST_MESSAGE);
 					mCommunicator.mCallback.onBroadcastMessageReceived(message);
 					break;
 
 				default:
-					mCommunicator.mCallback.onServiceMessageReceived(msg.what, msg.getData().getString(HotspotManagerService
+					mCommunicator.mCallback.onSystemMessageReceived(msg.what, msg.getData().getString(PluginIntent
 							.KEY_SERVICE_MESSAGE));
 					break;
 			}
@@ -88,12 +105,12 @@ public class HotspotManagerServiceCommunicator {
 	};
 
 	// broadcast messages are to remote clients
-	public boolean sendBroadcastMessage(BroadcastMessage data) {
+	boolean sendBroadcastMessage(BroadcastMessage data) {
 		try {
 			Message message = Message.obtain(null, HotspotManagerService.MSG_BROADCAST);
 			message.replyTo = mMessenger;
 			Bundle bundle = new Bundle(1);
-			bundle.putSerializable(HotspotManagerService.KEY_BROADCAST_MESSAGE, data);
+			bundle.putSerializable(PluginIntent.KEY_BROADCAST_MESSAGE, data);
 			message.setData(bundle);
 			if (mService != null) {
 				mService.send(message);
@@ -107,13 +124,13 @@ public class HotspotManagerServiceCommunicator {
 		}
 	}
 
-	// service messages are to the HotspotManagerService
-	public boolean sendServiceMessage(int type, String data) {
+	// system messages are to the HotspotManagerService
+	boolean sendSystemMessage(int type, String data) {
 		try {
 			Message message = Message.obtain(null, type);
 			message.replyTo = mMessenger;
 			Bundle bundle = new Bundle(1);
-			bundle.putString(HotspotManagerService.KEY_SERVICE_MESSAGE, data);
+			bundle.putString(PluginIntent.KEY_SERVICE_MESSAGE, data);
 			message.setData(bundle);
 			if (mService != null) {
 				mService.send(message);
@@ -128,14 +145,14 @@ public class HotspotManagerServiceCommunicator {
 	}
 
 	// connect to the service
-	public void bindService(Context context) {
+	void bindService(Context context) {
 		context.startService(new Intent(context, HotspotManagerService.class));
 		context.bindService(new Intent(context, HotspotManagerService.class), mConnection, Context.BIND_AUTO_CREATE);
 		mIsBound = true;
 	}
 
 	// disconnect from the service
-	public void unbindService(Context context, boolean keepServiceAlive) {
+	void unbindService(Context context, boolean keepServiceAlive) {
 		if (mIsBound) {
 			if (mService != null) {
 				try {
