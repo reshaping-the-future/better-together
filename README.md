@@ -10,5 +10,8 @@ See the [toolkit website](https://www.bettertogethertoolkit.org/) and [research 
 ## Developing your own plugin
 To develop plugins, all that is needed is to import the Better Together API. See the [api source and documentation](https://github.com/reshaping-the-future/better-together-api), and the [sample plugin](https://github.com/reshaping-the-future/better-together-chat-sample).
 
+## Integrating Better Together into your own app
+Developing a plugin is the simplest way to create services using the Better Together framework. However, if you'd prefer deeper integration, it is possible to add its connectivity to your own app. See, for example, [swarachakra keyboard](https://github.com/IDC-IITBombay/swarachakra-android/tree/bt_remote_keyboard), which enables remote text input in Indic scripts.
+
 ## License
 Apache 2.0
