@@ -1,1 +1,1 @@
-include ':app', ':plugin-video-base', ':plugin-video', ':plugin-shopping-base', ':plugin-shopping', ':plugin-game', ':plugin-book'
+include ':app', ':plugin-video-base', ':plugin-video', ':plugin-shopping-base', ':plugin-shopping'
