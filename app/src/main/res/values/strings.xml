@@ -27,6 +27,9 @@
 	<string name="join_hotspot">Scan a code, or choose an app</string>
 	<string name="host_hotspot">Scan this code to join in</string>
 	<string name="show_add_device">Show the code to let another person join in</string>
+	<string name="error_no_plugin_specified">Error: no plugin specified – please try again</string>
+	<string name="error_plugin_launch_failed">Error: unable to launch plugin – please try again</string>
+	<string name="error_play_store_launch_failed">Error: unable to launch Google Play</string>
 
 	<string name="change_plugin_closed">Change app ▲</string>
 	<string name="change_plugin_open">Change app ▼</string>

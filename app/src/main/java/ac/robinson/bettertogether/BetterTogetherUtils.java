@@ -72,10 +72,11 @@ public class BetterTogetherUtils {
 
 	@Nullable
 	public static Bitmap generateQrCode(String text) {
-		Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
+		Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
 
 		// medium error correction (15% data loss) - trade-off of QR size against coping with low-quality screens
 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+		hintMap.put(EncodeHintType.MARGIN, 1); // qr margin size - default = 4
 
 		int size = 256;
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();

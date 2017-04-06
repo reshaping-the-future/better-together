@@ -188,7 +188,7 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 	@Override
 	@SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
 	public void onClick(Plugin plugin) {
-		if (plugin == null) {
+		if (plugin == null) { // null plugin is the "get more plugins" button
 			launchGetPluginsActivity();
 		} else {
 			Log.d(TAG, "Plugin clicked: " + plugin.getRawPluginLabel());

@@ -41,6 +41,8 @@ class BluetoothUtils {
 	}
 
 	static void setDiscoverable(Context context, BluetoothAdapter mBluetoothAdapter) {
+		// note - ideally we would disable Bluetooth visibility when disconnecting, but this is not currently possible without
+		// resorting to hacky methods (e.g., set visibility to 1 second), which would also require another user prompt
 		if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
 			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, BLUETOOTH_VISIBILITY_TIME);

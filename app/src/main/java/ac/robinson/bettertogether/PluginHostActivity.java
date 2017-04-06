@@ -16,11 +16,9 @@
 
 package ac.robinson.bettertogether;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -29,7 +27,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,11 +35,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 
@@ -85,17 +81,9 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Intent intent = getIntent();
-		if (!intent.hasExtra(EXTRA_HOTSPOT_URL)) {
-			Log.e(TAG, "NO PLUGIN SPECIFIED"); // TODO: fix this - show a Toast?
-			finish();
-			return;
-		}
-
-		String requestedHotspotUrl = intent.getStringExtra(EXTRA_HOTSPOT_URL);
-
+		String requestedHotspotUrl = getIntent().getStringExtra(EXTRA_HOTSPOT_URL);
 		if (TextUtils.isEmpty(requestedHotspotUrl)) {
-			Log.e(TAG, "NO PLUGIN SPECIFIED"); // TODO: fix this - show a Toast?
+			Toast.makeText(PluginHostActivity.this, R.string.error_no_plugin_specified, Toast.LENGTH_SHORT).show();
 			finish();
 			return;
 		}
@@ -150,7 +138,10 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_add_device: // every mode activity can help others join the group
-				showQRDialog(getHotspotUrl());
+				QRPopupWindow qrPopupWindow = new QRPopupWindow(findViewById(R.id.action_add_device));
+				qrPopupWindow.setQRBitmap(BetterTogetherUtils.generateQrCode(getHotspotUrl()));
+				qrPopupWindow.showPopUp();
+
 				BroadcastMessage qrMessage = new BroadcastMessage(BroadcastMessage.TYPE_DEFAULT, HotspotManagerService
 						.SYSTEM_BROADCAST_EVENT_SHOW_QR_CODE);
 				qrMessage.setSystemMessage();
@@ -203,8 +194,9 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 								currentPluginPackage));
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
-					} catch (Exception ignored) {
-						// TODO: show error toast?
+					} catch (Exception e) {
+						Toast.makeText(PluginHostActivity.this, R.string.error_play_store_launch_failed, Toast.LENGTH_SHORT)
+								.show();
 					}
 				}
 			});
@@ -213,7 +205,7 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 	}
 
 	private void updateToolbarColours(int pluginTheme) {
-		// TODO: would be better to use plugin.hasTheme() here, but would require holding plugin in memory for no other reason
+		// note: would be better to use plugin.hasTheme() here, but would require holding plugin in memory for no other reason
 		if (pluginTheme == 0) {
 			// fall back to default theme colours - could set these in XML, but then the theme wouldn't override them
 			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -294,7 +286,8 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 				currentConnectionOptions.mPluginPackage = plugin.getPackageName();
 				launchPluginAndFinish(currentConnectionOptions.getHotspotUrl(), plugin.isInbuiltPlugin());
 			} else {
-				// TODO: is there anything we can do?
+				// nothing we can do - plugin installed or not present any more
+				Toast.makeText(PluginHostActivity.this, R.string.error_plugin_launch_failed, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -412,50 +405,11 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 				Log.d(TAG, "Launching plugin activity: " + activity.getPackageName());
 				try {
 					startActivity(intent);
-				} catch (Exception ignored) {
-					// TODO: plugin not present - anything we can do?
+				} catch (Exception e) {
+					pluginUpdated(activity.getPackageName()); // plugin not present (perhaps uninstalled just now - relaunch it)
 				}
 			}
 		}
-	}
-
-	private void showQRDialog(final String hotspotUrl) {
-		// suppress because we don't have (and can't get) a root view for the AlertDialog
-		@SuppressLint("InflateParams") View dialogLayout = LayoutInflater.from(PluginHostActivity.this).inflate(R.layout
-				.dialog_qr_code, null);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(PluginHostActivity.this);
-		builder.setPositiveButton(R.string.button_done, null);
-		final AlertDialog qrDialog = builder.create();
-		qrDialog.setView(dialogLayout);
-		qrDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-			@Override
-			public void onShow(DialogInterface d) {
-				ImageView imageView = (ImageView) qrDialog.findViewById(R.id.dialog_qr_image);
-				Bitmap qrCode = BetterTogetherUtils.generateQrCode(hotspotUrl);
-				if (imageView != null && qrCode != null) {
-					imageView.setImageBitmap(qrCode);
-
-					// TODO: improve this - have a popup dialog from the toolbar?
-					DisplayMetrics displayMetrics = new DisplayMetrics();
-					getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-					FrameLayout.LayoutParams layoutParams;
-					if (displayMetrics.heightPixels > displayMetrics.widthPixels) {
-						float viewWidth = (float) displayMetrics.widthPixels * 0.8f; // imageView.getWidth();
-						layoutParams = new FrameLayout.LayoutParams(Math.round(viewWidth), Math.round(viewWidth * (float) qrCode
-								.getHeight() / (float) qrCode.getWidth()));
-					} else {
-						float viewHeight = (float) displayMetrics.heightPixels * 0.8f; //imageView.getHeight();
-						layoutParams = new FrameLayout.LayoutParams(Math.round(viewHeight * (float) qrCode.getWidth() / (float)
-								qrCode.getHeight()), Math.round(viewHeight));
-					}
-					layoutParams.gravity = Gravity.CENTER;
-					imageView.setLayoutParams(layoutParams);
-				}
-			}
-		});
-
-		qrDialog.show();
 	}
 
 	@Override

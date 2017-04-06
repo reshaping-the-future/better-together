@@ -17,4 +17,7 @@
 
 <resources>
 	<dimen name="scanner_text_size">20sp</dimen>
+
+	<!-- same as Android guidelines - see: https://android.googlesource.com/platform/frameworks/support.git/+/master/design/res/values/dimens.xml#56 -->
+	<dimen name="default_elevation">4dp</dimen>
 </resources>

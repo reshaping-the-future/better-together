@@ -18,7 +18,6 @@
 <manifest
 	package="ac.robinson.bettertogether"
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:installLocation="auto">
 
 	<permission
@@ -44,9 +43,6 @@
 
 	<!-- for barcode scanning (note: already in merged manifest, but included here for clarity) -->
 	<uses-permission android:name="android.permission.CAMERA"/>
-
-	<!-- the gravity snap helper library *is* compatible down to v9 - issue reported, and the next version will update this -->
-	<uses-sdk tools:overrideLibrary="com.github.rubensousa.gravitysnaphelper"/>
 
 	<!-- don't require camera, as this requires a rear camera - this allows it to work on any camera (front or back) -->
 	<uses-feature
@@ -76,7 +72,7 @@
 		android:required="false"/>
 
 	<application
-		android:name="ac.robinson.bettertogether.BetterTogetherApplication"
+		android:name=".BetterTogetherApplication"
 		android:allowBackup="true"
 		android:fullBackupContent="@xml/backup_content"
 		android:icon="@mipmap/bt_ic_launcher"
@@ -84,7 +80,7 @@
 		android:supportsRtl="true"
 		android:theme="@style/BetterTogether">
 		<activity
-			android:name="ac.robinson.bettertogether.ConnectionSetupActivity"
+			android:name=".ConnectionSetupActivity"
 			android:label="@string/app_name"
 			android:windowSoftInputMode="stateAlwaysHidden">
 			<intent-filter>
@@ -95,15 +91,15 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.PluginHostActivity"
+			android:name=".PluginHostActivity"
 			android:label="@string/app_name"/>
 
 		<!-- communication between devices -->
-		<service android:name="ac.robinson.bettertogether.hotspot.HotspotManagerService"/>
+		<service android:name=".hotspot.HotspotManagerService"/>
 
 		<!-- demo/built-in plugin: shopping -->
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.shopping.BasketActivity"
+			android:name=".plugin.base.shopping.BasketActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_shopping_basket_deep_purple_800_48dp"
 			android:label="@string/basket_activity_name"
@@ -129,7 +125,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.shopping.CategoryActivity"
+			android:name=".plugin.base.shopping.CategoryActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_layers_deep_purple_800_48dp"
 			android:label="@string/category_activity_name"
@@ -143,7 +139,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.shopping.ItemActivity"
+			android:name=".plugin.base.shopping.ItemActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_dashboard_deep_purple_800_48dp"
 			android:label="@string/item_activity_name"
@@ -158,7 +154,7 @@
 
 		<!-- demo/built-in plugin: video -->
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.video.activity.VideoActivity"
+			android:name=".plugin.base.video.activity.VideoActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_movie_red_800_48dp"
 			android:label="@string/mode_youtube_videos"
@@ -184,7 +180,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.video.activity.ControlsActivity"
+			android:name=".plugin.base.video.activity.ControlsActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_play_arrow_red_800_48dp"
 			android:label="@string/mode_youtube_controls"
@@ -198,7 +194,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.video.activity.SearchActivity"
+			android:name=".plugin.base.video.activity.SearchActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_search_red_800_48dp"
 			android:label="@string/mode_youtube_search"
@@ -212,7 +208,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.video.activity.PlaylistActivity"
+			android:name=".plugin.base.video.activity.PlaylistActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_playlist_play_red_800_48dp"
 			android:label="@string/mode_youtube_playlist"
@@ -226,7 +222,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.video.activity.CommentsActivity"
+			android:name=".plugin.base.video.activity.CommentsActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_question_answer_red_800_48dp"
 			android:label="@string/mode_youtube_comments"
@@ -240,7 +236,7 @@
 		</activity>
 
 		<activity
-			android:name="ac.robinson.bettertogether.plugin.base.video.activity.RelatedVideoActivity"
+			android:name=".plugin.base.video.activity.RelatedVideoActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_subscriptions_red_800_48dp"
 			android:label="@string/mode_youtube_related_videos"
