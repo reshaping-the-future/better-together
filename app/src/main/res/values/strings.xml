@@ -50,8 +50,14 @@
 	<string name="hint_edit_settings_access">Edit settings access</string>
 	<string name="error_editing_settings">Unable to set up connection - please make sure you grant Better Together permission to edit settings</string>
 
+	<string name="title_camera_access">Camera access</string>
+	<string name="hint_enable_camera_access">Please allow Better Together to use your camera.\n\nThe camera allows Better Together to scan codes to connect to other devices near to you</string>
+	<string name="error_accessing_camera">Unable to start scanning - please make sure you give Better Together permission to access your camera</string>
+
 	<string name="title_coarse_location_access">Location access</string>
 	<string name="hint_enable_coarse_location_access">Please allow Better Together to access your location.\n\nThis access allows Better Together to find other devices near to you and connect to other Better Together apps</string>
-	<string name="hint_edit_coarse_location_access">Ask me again</string>
-	<string name="error_accessing_location">Unable to set up connection - please make sure you grant Better Together permission to access your location</string>
+	<string name="error_accessing_location">Unable to set up connection - please make sure you give Better Together permission to access your location</string>
+
+	<string name="hint_ask_again_permissions">Ask me again</string>
+	<string name="hint_edit_permissions">Edit permissions</string>
 </resources>

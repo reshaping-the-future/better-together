@@ -43,8 +43,8 @@ class BluetoothConnector {
 		mUuid = uuid;
 	}
 
+	// we *do* check the api level for createInsecureRfcommSocketToServiceRecord
 	@SuppressLint("NewApi")
-		// we *do* check the api level for createInsecureRfcommSocketToServiceRecord
 	BluetoothSocketWrapper connect() throws IOException {
 		BluetoothSocket socket;
 		if (mPreferSecureConnection || Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
