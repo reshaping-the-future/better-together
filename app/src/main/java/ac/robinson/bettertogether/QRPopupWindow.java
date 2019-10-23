@@ -21,7 +21,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.support.v4.widget.PopupWindowCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +28,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+
+import androidx.core.widget.PopupWindowCompat;
 
 class QRPopupWindow {
 	private View mAnchorView;
@@ -62,8 +63,8 @@ class QRPopupWindow {
 		// could use mPopupWindow.getMaxAvailableHeight() if only there was a width version!
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
-		int popupSize = (int) Math.round((displayMetrics.widthPixels > displayMetrics.heightPixels ? displayMetrics.heightPixels
-				: displayMetrics.widthPixels) * 0.9);
+		int popupSize = (int) Math.round((displayMetrics.widthPixels >
+				displayMetrics.heightPixels ? displayMetrics.heightPixels : displayMetrics.widthPixels) * 0.9);
 
 		// normally: WindowManager.LayoutParams.WRAP_CONTENT);
 		mPopupWindow.setWidth(popupSize);

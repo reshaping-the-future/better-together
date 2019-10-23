@@ -1,38 +1,40 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+	compileSdkVersion 28
 
-    defaultConfig {
-        applicationId 'ac.robinson.bettertogether'
-        minSdkVersion 9
-        targetSdkVersion 25
-        versionCode 2
-        versionName '1.0'
-        resConfigs 'en'
-    }
+	defaultConfig {
+		applicationId 'ac.robinson.bettertogether'
+		minSdkVersion 14
+		targetSdkVersion 28
+		versionCode 2
+		versionName '1.0'
+		resConfigs 'en'
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled true
+			shrinkResources true
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support:recyclerview-v7:25.3.0'
-    compile 'com.android.support:cardview-v7:25.3.0'
+	implementation 'androidx.appcompat:appcompat:1.1.0'
+	implementation 'androidx.recyclerview:recyclerview:1.0.0'
+	implementation 'androidx.cardview:cardview:1.0.0'
 
-    compile 'com.github.rubensousa:gravitysnaphelper:1.1' // for snapping RecyclerViews to start
-    compile 'com.journeyapps:zxing-android-embedded:3.5.0' // for simple ZXing integration (includes zxing core for creating QRs)
-    compile 'org.greenrobot:eventbus:3.0.0' // for messages between components
-    compile 'ac.robinson.bettertogether:api:1.0.0' // the Better Together communication API
+	implementation 'com.github.rubensousa:gravitysnaphelper:1.1' // for snapping RecyclerViews to start
+	implementation 'org.greenrobot:eventbus:3.1.1' // for messages between components
+	implementation 'ac.robinson.bettertogether:api:1.0.1' // the Better Together communication API
 
-    // include sample plugins
-    compile project(path: ':plugin-video-base')
-    compile project(path: ':plugin-shopping-base')
+	// for simple ZXing integration (includes zxing core for creating QRs)
+	implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+	implementation 'com.google.zxing:core:3.3.0'
+
+	// include sample plugins
+	implementation project(path: ':plugin-video-base')
+	implementation project(path: ':plugin-shopping-base')
 }

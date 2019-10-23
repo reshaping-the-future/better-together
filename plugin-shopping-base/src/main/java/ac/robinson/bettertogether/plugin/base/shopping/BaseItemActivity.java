@@ -21,8 +21,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 public abstract class BaseItemActivity extends BaseShoppingActivity implements SensorEventListener {
 

@@ -17,7 +17,6 @@
 package ac.robinson.bettertogether.plugin.base.shopping;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,13 +24,14 @@ import android.view.WindowManager;
 
 import ac.robinson.bettertogether.api.BasePluginActivity;
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
+import androidx.annotation.Nullable;
 
 public abstract class BaseShoppingActivity extends BasePluginActivity {
 
 	private static final String TAG = "BaseShoppingActivity";
 
 	// how many items of each filter type are available
-	static final int[] AVAILABLE_ITEMS = {8, 5, 7, 9, 7};
+	static final int[] AVAILABLE_ITEMS = { 8, 5, 7, 9, 7 };
 
 	// broadcast message types
 	static final int TYPE_TOUCH_DOWN = 1;

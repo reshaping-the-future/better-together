@@ -35,9 +35,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -61,7 +58,9 @@ import ac.robinson.bettertogether.event.MessageReceivedEvent;
 import ac.robinson.bettertogether.event.ServerConnectionSuccessEvent;
 import ac.robinson.bettertogether.event.ServerErrorEvent;
 import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class HotspotManagerService extends Service {
 
@@ -150,7 +149,6 @@ public class HotspotManagerService extends Service {
 		mMessenger = new Messenger(new IncomingHandler(HotspotManagerService.this));
 	}
 
-	@SuppressFBWarnings("REC_CATCH_EXCEPTION")
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -212,8 +210,8 @@ public class HotspotManagerService extends Service {
 			IntentFilter localIntentFilter = new IntentFilter();
 			localIntentFilter.addAction(PluginIntent.ACTION_MESSAGE_RECEIVED);
 			localIntentFilter.addAction(PluginIntent.ACTION_STOP_PLUGIN);
-			LocalBroadcastManager.getInstance(HotspotManagerService.this).registerReceiver(mLocalBroadcastReceiver,
-					localIntentFilter);
+			LocalBroadcastManager.getInstance(HotspotManagerService.this)
+					.registerReceiver(mLocalBroadcastReceiver, localIntentFilter);
 
 			// listen for EventBus events (from wifi/bluetooth servers)
 			if (!EventBus.getDefault().isRegistered(HotspotManagerService.this)) {
@@ -253,7 +251,6 @@ public class HotspotManagerService extends Service {
 		}
 	}
 
-	@SuppressFBWarnings("REC_CATCH_EXCEPTION")
 	private void restoreOriginalWifiHotspotState() {
 		if (CREATE_WIFI_HOTSPOT_SUPPORTED) {
 			// reset to original name; must leave disabled as we don't know the original password...
@@ -424,8 +421,8 @@ public class HotspotManagerService extends Service {
 		// set up new network - *must* be surrounded by " (see: https://stackoverflow.com/questions/2140133/)
 		Log.d(TAG, "Connecting to Wifi network " + connectionOptions.mName);
 		WifiConfiguration wifiConfiguration = new WifiConfiguration();
-		WifiUtils.setConfigurationAttributes(wifiConfiguration, "\"" + connectionOptions.mName + "\"", "\"" + connectionOptions
-				.mPassword + "\"");
+		WifiUtils.setConfigurationAttributes(wifiConfiguration,
+				"\"" + connectionOptions.mName + "\"", "\"" + connectionOptions.mPassword + "\"");
 
 		int savedNetworkId = WifiUtils.getWifiNetworkId(mWifiManager, wifiConfiguration.SSID);
 		if (savedNetworkId >= 0) {
@@ -506,8 +503,8 @@ public class HotspotManagerService extends Service {
 					break;
 
 				case WifiManager.WIFI_STATE_CHANGED_ACTION:
-					Log.d(TAG, "Wifi state changed to: " + intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager
-							.WIFI_STATE_UNKNOWN));
+					Log.d(TAG, "Wifi state changed to: " +
+							intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN));
 					switch (intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)) {
 						case WifiManager.WIFI_STATE_DISABLED:
 							// TODO: can we do this only when needed? (e.g., don't fight the user)
@@ -582,8 +579,8 @@ public class HotspotManagerService extends Service {
 						}
 						Log.d(TAG, "(State change for network: " + networkName1 + " / " + networkName2 + "; connected: " +
 								isConnected + " - searching for " + mConnectionOptions.mName + ")");
-						if (isConnected && (mConnectionOptions.mName.equals(networkName1) || mConnectionOptions.mName.equals
-								(networkName2)) && mWifiClient == null) {
+						if (isConnected && (mConnectionOptions.mName.equals(networkName1) ||
+								mConnectionOptions.mName.equals(networkName2)) && mWifiClient == null) {
 							Log.d(TAG, "Continuing with current Wifi connection (2)");
 							connectWifiClient(mConnectionOptions.mIPAddress, mConnectionOptions.mPort);
 						}
@@ -645,8 +642,8 @@ public class HotspotManagerService extends Service {
 	}
 
 	private void retryWifiConnection() {
-		sendSystemMessageToAllLocalClients(EVENT_CONNECTION_STATUS_UPDATE, "Couldn't connect using Wifi – retrying " +
-				"connection...");
+		sendSystemMessageToAllLocalClients(EVENT_CONNECTION_STATUS_UPDATE,
+				"Couldn't connect using Wifi – retrying " + "connection...");
 		Log.d(TAG, "Retrying remote Wifi connection");
 
 		mIsConnected = false;
@@ -670,8 +667,8 @@ public class HotspotManagerService extends Service {
 	}
 
 	private void retryBluetoothConnection() {
-		sendSystemMessageToAllLocalClients(EVENT_CONNECTION_STATUS_UPDATE, "Couldn't connect using Bluetooth – retrying " +
-				"connection...");
+		sendSystemMessageToAllLocalClients(EVENT_CONNECTION_STATUS_UPDATE,
+				"Couldn't connect using Bluetooth – retrying " + "connection...");
 		Log.d(TAG, "Retrying remote Bluetooth connection");
 
 		mIsConnected = false;
@@ -817,8 +814,8 @@ public class HotspotManagerService extends Service {
 
 			switch (intent.getAction()) {
 				case PluginIntent.ACTION_MESSAGE_RECEIVED: // messages received from plugin activities
-					BroadcastMessage message = (BroadcastMessage) intent.getSerializableExtra(PluginIntent
-							.KEY_BROADCAST_MESSAGE);
+					BroadcastMessage message =
+							(BroadcastMessage) intent.getSerializableExtra(PluginIntent.KEY_BROADCAST_MESSAGE);
 
 					// note: internal messages are dealt with by the service locally (but still forwarded to remote clients)
 					if (message != null) {
@@ -840,7 +837,6 @@ public class HotspotManagerService extends Service {
 	};
 
 	// sends a broadcast message (e.g., something from remote clients) to all local clients
-	@SuppressFBWarnings("ANDROID_BROADCAST")
 	private void sendBroadcastMessageToAllLocalClients(BroadcastMessage msg) {
 		for (int i = mClients.size() - 1; i >= 0; i--) {
 			try {
@@ -1061,7 +1057,6 @@ public class HotspotManagerService extends Service {
 		}
 	}
 
-	@SuppressFBWarnings("ANDROID_BROADCAST")
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onClientMessageError(ClientMessageErrorEvent event) {
 		Log.d(TAG, "Client message error (event) " + event.mType);

@@ -19,7 +19,6 @@ package ac.robinson.bettertogether.hotspot;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,6 +32,7 @@ import ac.robinson.bettertogether.BetterTogetherUtils;
 import ac.robinson.bettertogether.event.EventType;
 import ac.robinson.bettertogether.event.ServerErrorEvent;
 import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
+import androidx.annotation.Nullable;
 
 class BluetoothServer implements Runnable {
 

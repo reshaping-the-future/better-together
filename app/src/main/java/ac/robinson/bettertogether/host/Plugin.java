@@ -19,14 +19,13 @@ package ac.robinson.bettertogether.host;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ac.robinson.bettertogether.R;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import androidx.annotation.Nullable;
 
 public class Plugin {
 
@@ -34,7 +33,6 @@ public class Plugin {
 	private String mPackageName;
 	private boolean mIsInbuiltPlugin = false;
 
-	@SuppressFBWarnings("PME_POOR_MANS_ENUM")
 	private int mTheme = 0;
 	private int mInbuiltPluginIconResource = 0;
 	private Drawable mIcon = null;
@@ -81,7 +79,6 @@ public class Plugin {
 		return mPackageName;
 	}
 
-	@SuppressFBWarnings("CC_CYCLOMATIC_COMPLEXITY")
 	boolean setTheme(@Nullable String themeName) {
 		if (TextUtils.isEmpty(themeName)) {
 			return false;

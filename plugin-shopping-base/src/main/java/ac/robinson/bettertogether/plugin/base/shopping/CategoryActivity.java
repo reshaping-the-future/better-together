@@ -17,10 +17,6 @@
 package ac.robinson.bettertogether.plugin.base.shopping;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -28,6 +24,10 @@ import java.security.SecureRandom;
 import java.util.Locale;
 
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class CategoryActivity extends BaseItemActivity {
 
@@ -45,7 +45,7 @@ public class CategoryActivity extends BaseItemActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -53,7 +53,7 @@ public class CategoryActivity extends BaseItemActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mCategoryView = (ImageView) findViewById(R.id.shop_item);
+		mCategoryView = findViewById(R.id.shop_item);
 		mCategoryView.setOnTouchListener(mOnTouchListener);
 
 		if (savedInstanceState != null) {

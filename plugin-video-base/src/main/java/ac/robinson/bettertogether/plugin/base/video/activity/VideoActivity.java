@@ -18,7 +18,6 @@ package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.view.WindowManager;
 
 import com.androidnetworking.AndroidNetworking;
@@ -47,10 +46,11 @@ import ac.robinson.bettertogether.plugin.base.video.youtube.DeveloperKey;
 import ac.robinson.bettertogether.plugin.base.video.youtube.MessageType;
 import ac.robinson.bettertogether.plugin.base.video.youtube.YouTubeFailureRecoveryActivity;
 import ac.robinson.bettertogether.plugin.base.video.youtube.YouTubeVideoItem;
+import androidx.annotation.NonNull;
 
 public class VideoActivity extends YouTubeFailureRecoveryActivity {
 
-	private static final String JSON_INTERFACE_URL = "http://cs.swan.ac.uk/~cssimonr/projects/better-together/youtube.php";
+	private static final String JSON_INTERFACE_URL = "https://cs.swansea.ac.uk/~cssimonr/projects/better-together/youtube.php";
 
 	private PluginConnectionDelegate mDelegate;
 
@@ -79,7 +79,7 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.mode_youtube_video_player);
-		mPlayerView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+		mPlayerView = findViewById(R.id.youtube_view);
 
 		mPlayerStateChangeListener = new YouTubePlayerStateChangeListener();
 		mPlaybackEventListener = new YouTubePlaybackEventListener();
@@ -98,8 +98,8 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 		mPlayerView.initialize(DeveloperKey.DEVELOPER_KEY, this);
 	}
 
-	private PluginConnectionDelegate.PluginMessageCallback mMessageReceivedCallback = new PluginConnectionDelegate
-			.PluginMessageCallback() {
+	private PluginConnectionDelegate.PluginMessageCallback mMessageReceivedCallback =
+			new PluginConnectionDelegate.PluginMessageCallback() {
 		@Override
 		public void onMessageReceived(@NonNull BroadcastMessage message) {
 			VideoActivity.this.onMessageReceived(message);
@@ -253,8 +253,8 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 
 			case MessageType.COMMAND_GET_SEARCH:
 				try {
-					getAndForwardCompactedJSON(command, URLEncoder.encode(message.getMessage(), Charset.defaultCharset().name
-							()));
+					getAndForwardCompactedJSON(command, URLEncoder.encode(message.getMessage(),
+							Charset.defaultCharset().name()));
 				} catch (UnsupportedEncodingException e) {
 					// TODO: handle this
 				}
@@ -326,21 +326,25 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 				resultCommand = BroadcastMessage.TYPE_DEFAULT; // nothing to do here
 		}
 
-		AndroidNetworking.get(JSON_INTERFACE_URL).addQueryParameter("q", query).addQueryParameter(requestCommand, "1").build()
+		AndroidNetworking.get(JSON_INTERFACE_URL)
+				.addQueryParameter("q", query)
+				.addQueryParameter(requestCommand, "1")
+				.build()
 				.getAsString(new StringRequestListener() {
 
-			@Override
-			public void onResponse(String response) {
-				// TODO: note, we get the JSON result, but broadcast to other devices for them to process (hence get as string)
-				BroadcastMessage jsonResult = new BroadcastMessage(resultCommand, response);
-				sendMessage(jsonResult);
-			}
+					@Override
+					public void onResponse(String response) {
+						// TODO: note, we get the JSON result, but broadcast to other devices for them to process (hence get as
+						//  string)
+						BroadcastMessage jsonResult = new BroadcastMessage(resultCommand, response);
+						sendMessage(jsonResult);
+					}
 
-			@Override
-			public void onError(ANError anError) {
-				// TODO: handle this
-			}
-		});
+					@Override
+					public void onError(ANError anError) {
+						// TODO: handle this
+					}
+				});
 	}
 
 	private void forwardPlaylistJSON() {
@@ -368,8 +372,8 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 
 	private void postPlaybackStateUpdate() {
 		if (mPlayer != null) {
-			BroadcastMessage playbackState = new BroadcastMessage(mPlayer.isPlaying() ? MessageType.COMMAND_PLAY : MessageType
-					.COMMAND_PAUSE, null);
+			BroadcastMessage playbackState = new BroadcastMessage(mPlayer.isPlaying() ? MessageType.COMMAND_PLAY :
+					MessageType.COMMAND_PAUSE, null);
 			playbackState.setIntExtra(mPlayer.getCurrentTimeMillis());
 			sendMessage(playbackState);
 		}

@@ -16,10 +16,8 @@
 
 package ac.robinson.bettertogether.hotspot;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -43,11 +41,9 @@ class BluetoothConnector {
 		mUuid = uuid;
 	}
 
-	// we *do* check the api level for createInsecureRfcommSocketToServiceRecord
-	@SuppressLint("NewApi")
 	BluetoothSocketWrapper connect() throws IOException {
 		BluetoothSocket socket;
-		if (mPreferSecureConnection || Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
+		if (mPreferSecureConnection) {
 			socket = mBluetoothDevice.createRfcommSocketToServiceRecord(mUuid);
 		} else {
 			socket = mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(mUuid);
@@ -125,9 +121,9 @@ class BluetoothConnector {
 			super(socket);
 			try {
 				Class<?> cls = socket.getRemoteDevice().getClass();
-				Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
+				Class<?>[] paramTypes = new Class<?>[]{ Integer.TYPE };
 				Method m = cls.getMethod("createRfcommSocket", paramTypes);
-				Object[] params = new Object[]{1};
+				Object[] params = new Object[]{ 1 };
 				mFallbackSocket = (BluetoothSocket) m.invoke(socket.getRemoteDevice(), params);
 			} catch (Exception e) {
 				throw new FallbackException(e); // TODO: do we actually want to do this? (or just retry?)

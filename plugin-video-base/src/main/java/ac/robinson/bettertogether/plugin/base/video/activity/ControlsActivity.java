@@ -17,9 +17,6 @@
 package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -29,6 +26,9 @@ import ac.robinson.bettertogether.api.BasePluginActivity;
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.plugin.base.video.R;
 import ac.robinson.bettertogether.plugin.base.video.youtube.MessageType;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class ControlsActivity extends BasePluginActivity {
 
@@ -43,7 +43,7 @@ public class ControlsActivity extends BasePluginActivity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.mode_youtube_controls);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -51,8 +51,8 @@ public class ControlsActivity extends BasePluginActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mPlayPauseButton = (ImageButton) findViewById(R.id.play_pause_button);
-		mSeekBar = (SeekBar) findViewById(R.id.video_seek_bar);
+		mPlayPauseButton = findViewById(R.id.play_pause_button);
+		mSeekBar = findViewById(R.id.video_seek_bar);
 		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
@@ -85,8 +85,8 @@ public class ControlsActivity extends BasePluginActivity {
 		final int viewId = view.getId();
 		// can't use resource id switch statements in library modules
 		if (viewId == R.id.play_pause_button) {
-			BroadcastMessage playPauseMessage = new BroadcastMessage(mIsPlaying ? MessageType.COMMAND_PAUSE : MessageType
-					.COMMAND_PLAY, null);
+			BroadcastMessage playPauseMessage = new BroadcastMessage(mIsPlaying ? MessageType.COMMAND_PAUSE :
+					MessageType.COMMAND_PLAY, null);
 			sendMessage(playPauseMessage);
 		} else if (viewId == R.id.previous_button || viewId == R.id.next_button) {
 			BroadcastMessage skipMessage = new BroadcastMessage(MessageType.COMMAND_SKIP, null);

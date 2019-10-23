@@ -17,8 +17,6 @@
 package ac.robinson.bettertogether.hotspot;
 
 import android.net.UrlQuerySanitizer;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ac.robinson.bettertogether.BetterTogetherUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class ConnectionOptions {
 	// note: hotspot IP address is hardcoded in Android sources: http://stackoverflow.com/a/23183923

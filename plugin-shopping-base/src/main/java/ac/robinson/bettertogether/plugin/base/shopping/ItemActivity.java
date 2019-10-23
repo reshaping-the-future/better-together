@@ -17,10 +17,6 @@
 package ac.robinson.bettertogether.plugin.base.shopping;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -29,6 +25,10 @@ import java.security.SecureRandom;
 import java.util.Locale;
 
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class ItemActivity extends BaseItemActivity {
 
@@ -47,7 +47,7 @@ public class ItemActivity extends BaseItemActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -55,7 +55,7 @@ public class ItemActivity extends BaseItemActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mItemView = (ImageView) findViewById(R.id.shop_item);
+		mItemView = findViewById(R.id.shop_item);
 		mItemView.setOnTouchListener(mOnTouchListener);
 
 		if (savedInstanceState != null) {

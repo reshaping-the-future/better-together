@@ -19,7 +19,6 @@ package ac.robinson.bettertogether.plugin.base.video.youtube;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,20 +37,20 @@ import java.util.ArrayList;
 import ac.robinson.bettertogether.api.BasePluginActivity;
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.plugin.base.video.R;
+import androidx.annotation.NonNull;
 
-public class YouTubeVideoArrayAdapter extends
-		ArrayAdapter<ac.robinson.bettertogether.plugin.base.video.youtube.YouTubeVideoItem> {
+public class YouTubeVideoArrayAdapter extends ArrayAdapter<ac.robinson.bettertogether.plugin.base.video.youtube.YouTubeVideoItem> {
 
 	private final ArrayList<YouTubeVideoItem> mVideoList;
 	private boolean mPlaylistMode;
-	private VideoClickListener mClickListener = null;
+	private VideoClickListener mClickListener;
 
 	interface VideoClickListener {
 		void onVideoClick(YouTubeVideoItem videoItem, boolean playNow);
 	}
 
 	private YouTubeVideoArrayAdapter(Context context, ArrayList<YouTubeVideoItem> itemsArrayList, boolean playlistMode,
-	                                 VideoClickListener listener) {
+									 VideoClickListener listener) {
 		super(context, R.layout.youtube_video_list_item, itemsArrayList);
 		mVideoList = itemsArrayList;
 		mPlaylistMode = playlistMode;
@@ -79,12 +78,14 @@ public class YouTubeVideoArrayAdapter extends
 			}
 		}
 
-		return new YouTubeVideoArrayAdapter(activity, videoResults, playlistMode, new YouTubeVideoArrayAdapter
-				.VideoClickListener() {
+		return new YouTubeVideoArrayAdapter(activity, videoResults, playlistMode,
+				new YouTubeVideoArrayAdapter.VideoClickListener() {
 			@Override
 			public void onVideoClick(YouTubeVideoItem videoItem, boolean playNow) {
-				BroadcastMessage addMessage = new BroadcastMessage(playNow ? MessageType.COMMAND_SELECT : MessageType
-						.COMMAND_ADD, videoItem.toJSONObject().toString());
+				BroadcastMessage addMessage = new BroadcastMessage(playNow ? MessageType.COMMAND_SELECT :
+						MessageType.COMMAND_ADD, videoItem
+						.toJSONObject()
+						.toString());
 				activity.sendMessage(addMessage);
 			}
 		});
@@ -112,12 +113,12 @@ public class YouTubeVideoArrayAdapter extends
 			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 			currentView = inflater.inflate(R.layout.youtube_video_list_item, parent, false);
 			videoHolder = new YouTubeVideoHolder();
-			videoHolder.mTitle = (TextView) currentView.findViewById(R.id.video_title);
-			videoHolder.mChannel = (TextView) currentView.findViewById(R.id.video_channel);
-			videoHolder.mThumbnail = (ImageView) currentView.findViewById(R.id.video_thumbnail);
-			videoHolder.mPlayButton = (ImageButton) currentView.findViewById(R.id.video_play);
+			videoHolder.mTitle = currentView.findViewById(R.id.video_title);
+			videoHolder.mChannel = currentView.findViewById(R.id.video_channel);
+			videoHolder.mThumbnail = currentView.findViewById(R.id.video_thumbnail);
+			videoHolder.mPlayButton = currentView.findViewById(R.id.video_play);
 			videoHolder.mPlayButton.setOnClickListener(mButtonClickListener);
-			videoHolder.mQueueButton = (ImageButton) currentView.findViewById(R.id.video_queue);
+			videoHolder.mQueueButton = currentView.findViewById(R.id.video_queue);
 			videoHolder.mQueueButton.setOnClickListener(mButtonClickListener);
 			currentView.setTag(videoHolder);
 

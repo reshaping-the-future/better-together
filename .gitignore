@@ -6,6 +6,8 @@ captures/
 
 .idea/workspace.xml
 .idea/libraries
+.idea/codeStyles
+.idea/caches
 
 local.properties
 

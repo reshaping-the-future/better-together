@@ -1,27 +1,26 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+	compileSdkVersion 28
 
-    defaultConfig {
-        applicationId 'ac.robinson.bettertogether.plugin.shopping'
-        minSdkVersion 9
-        targetSdkVersion 25
-        versionCode 1
-        versionName '1.0'
-        resConfigs 'en'
-    }
+	defaultConfig {
+		applicationId 'ac.robinson.bettertogether.plugin.shopping'
+		minSdkVersion 14
+		targetSdkVersion 28
+		versionCode 1
+		versionName '1.0'
+		resConfigs 'en'
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled true
+			shrinkResources true
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
 }
 
 dependencies {
-    compile project(path: ':plugin-shopping-base')
+	implementation project(path: ':plugin-shopping-base')
 }

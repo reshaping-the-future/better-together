@@ -17,9 +17,6 @@
 package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -30,6 +27,9 @@ import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.plugin.base.video.R;
 import ac.robinson.bettertogether.plugin.base.video.youtube.MessageType;
 import ac.robinson.bettertogether.plugin.base.video.youtube.YouTubeVideoArrayAdapter;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class RelatedVideoActivity extends BasePluginActivity {
 
@@ -44,7 +44,7 @@ public class RelatedVideoActivity extends BasePluginActivity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.mode_youtube_related_videos);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -52,8 +52,8 @@ public class RelatedVideoActivity extends BasePluginActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mListView = (ListView) findViewById(R.id.related_videos_list);
-		mProgressIndicator = (ProgressBar) findViewById(R.id.related_videos_progress_indicator);
+		mListView = findViewById(R.id.related_videos_list);
+		mProgressIndicator = findViewById(R.id.related_videos_progress_indicator);
 
 		if (savedInstanceState != null) {
 			mCurrentVideos = savedInstanceState.getString("mCurrentVideos");

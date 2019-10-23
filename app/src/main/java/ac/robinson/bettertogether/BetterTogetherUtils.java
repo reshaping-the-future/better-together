@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.zxing.BarcodeFormat;
@@ -35,14 +34,17 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.Nullable;
+
 public class BetterTogetherUtils {
 	private static final String RANDOM_DICTIONARY = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	private static SecureRandom SECURE_RANDOM = new SecureRandom();
 
 	public static String getRandomString(int length) {
 		StringBuilder sb = new StringBuilder(length);
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++) {
 			sb.append(RANDOM_DICTIONARY.charAt(SECURE_RANDOM.nextInt(RANDOM_DICTIONARY.length())));
+		}
 		return sb.toString();
 	}
 
@@ -101,7 +103,7 @@ public class BetterTogetherUtils {
 
 	// get the colourId (e.g., R.attr.colorButtonNormal, etc) from the given theme
 	public static int getThemeColour(Context context, int theme, int colourId) {
-		TypedArray typedArray = context.obtainStyledAttributes(theme, new int[]{colourId});
+		TypedArray typedArray = context.obtainStyledAttributes(theme, new int[]{ colourId });
 		int colour = typedArray.getColor(0, Color.BLACK);
 		typedArray.recycle();
 		return colour;

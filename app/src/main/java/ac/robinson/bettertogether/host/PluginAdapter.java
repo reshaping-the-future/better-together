@@ -18,7 +18,6 @@ package ac.robinson.bettertogether.host;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.robinson.bettertogether.R;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class PluginAdapter extends RecyclerView.Adapter<PluginAdapter.PluginViewHolder> implements GravitySnapHelper
-		.SnapListener {
+public class PluginAdapter extends RecyclerView.Adapter<PluginAdapter.PluginViewHolder> implements GravitySnapHelper.SnapListener {
 
 	// a fake plugin for the "get more plugins" button
 	private static final String EMPTY_PACKAGE = "ac.robinson.bettertogether.plugin.open_google_play";
@@ -62,6 +62,7 @@ public class PluginAdapter extends RecyclerView.Adapter<PluginAdapter.PluginView
 		notifyDataSetChanged();
 	}
 
+	@NonNull
 	@Override
 	public PluginViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_plugins, parent, false);
@@ -76,8 +77,8 @@ public class PluginAdapter extends RecyclerView.Adapter<PluginAdapter.PluginView
 		Plugin plugin = mPlugins.get(position);
 		holder.mTextView.setText(plugin.getFilteredPluginLabel(mContext));
 		if (EMPTY_PACKAGE.equals(plugin.getPackageName())) {
-			holder.mTextView.setCompoundDrawablesWithIntrinsicBounds(null, mContext.getResources().getDrawable(R.drawable
-					.ic_add_grey_900_48dp), null, null);
+			holder.mTextView.setCompoundDrawablesWithIntrinsicBounds(null, mContext.getResources()
+					.getDrawable(R.drawable.ic_add_grey_900_48dp), null, null);
 			// holder.mTextView.setBackgroundDrawable(sDefaultBackground);
 		} else {
 			holder.mTextView.setCompoundDrawablesWithIntrinsicBounds(null, plugin.getIcon(mContext), null, null);
@@ -101,7 +102,7 @@ public class PluginAdapter extends RecyclerView.Adapter<PluginAdapter.PluginView
 		PluginViewHolder(View itemView) {
 			super(itemView);
 			itemView.setOnClickListener(this);
-			mTextView = (TextView) itemView.findViewById(R.id.plugin_label);
+			mTextView = itemView.findViewById(R.id.plugin_label);
 		}
 
 		@Override

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +29,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 class WifiUtils {
 
@@ -53,15 +54,14 @@ class WifiUtils {
 
 	// update a WifiConfiguration with the given name (SSID) and password - see: https://stackoverflow.com/questions/2140133/
 	static WifiConfiguration setConfigurationAttributes(@NonNull WifiConfiguration wifiConfiguration, @NonNull String name,
-	                                                    @NonNull String password) {
+														@NonNull String password) {
 		wifiConfiguration.SSID = name;
 		wifiConfiguration.preSharedKey = password;
 		return wifiConfiguration; // TODO: add other attributes? (see: http://stackoverflow.com/a/13875379)
 	}
 
 	// set the hotspot configuration without changing its on/off status
-	static void setWifiHotspotConfiguration(WifiManager mWifiManager, @NonNull WifiConfiguration wifiConfiguration) throws
-			NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	static void setWifiHotspotConfiguration(WifiManager mWifiManager, @NonNull WifiConfiguration wifiConfiguration) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Method setWifiApConfiguration = mWifiManager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
 		setWifiApConfiguration.invoke(mWifiManager, wifiConfiguration);
 	}
@@ -76,8 +76,7 @@ class WifiUtils {
 		return false;
 	}
 
-	static void setHotspotEnabled(WifiManager mWifiManager, WifiConfiguration wifiConfiguration, boolean enabled) throws
-			NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	static void setHotspotEnabled(WifiManager mWifiManager, WifiConfiguration wifiConfiguration, boolean enabled) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// TODO: wait for the hotspot to be enabled, then send clients a confirmation
 		// TODO: do we need to wait for Wifi to finish being disabled before enabling the hotspot?
 		mWifiManager.setWifiEnabled(false); // some devices require this to be called before enabling the hotspot
@@ -100,8 +99,8 @@ class WifiUtils {
 
 	// TODO: is this necessary for some devices? (see: http://stackoverflow.com/a/21968663)
 	String getWifiIp() throws SocketException {
-		for (Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces(); networkInterfaces
-				.hasMoreElements(); ) {
+		for (Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+			 networkInterfaces.hasMoreElements(); ) {
 			NetworkInterface networkInterface = networkInterfaces.nextElement();
 			if (networkInterface.isLoopback()) {
 				continue;
@@ -118,8 +117,8 @@ class WifiUtils {
 			if (networkInterface.getHardwareAddress() == null) {
 				continue;
 			}
-			for (Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses(); inetAddresses.hasMoreElements();
-					) {
+			for (Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+				 inetAddresses.hasMoreElements(); ) {
 				InetAddress inetAddress = inetAddresses.nextElement();
 				if (inetAddress.getAddress().length == 4) {
 					return inetAddress.getHostAddress();

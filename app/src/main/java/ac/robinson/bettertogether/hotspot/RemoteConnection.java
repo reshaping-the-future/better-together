@@ -31,7 +31,6 @@ import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.event.ClientMessageErrorEvent;
 import ac.robinson.bettertogether.event.EventType;
 import ac.robinson.bettertogether.event.MessageReceivedEvent;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 abstract class RemoteConnection implements Runnable {
 
@@ -43,20 +42,19 @@ abstract class RemoteConnection implements Runnable {
 		TAG = logTag;
 	}
 
-	@SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
 	boolean sendMessage(OutputStreamWriter streamWriter, String message) {
 		try {
 			if (streamWriter != null) {
 				String formatString = "%0" + HotspotManagerService.MESSAGE_PART_COUNT_SIZE + "d";
 				if (message.length() < HotspotManagerService.MESSAGE_PAYLOAD_SIZE) {
-					streamWriter.write(BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE) + String
-							.format(formatString, 1) + String.format(Locale.US, formatString, 0) + message +
+					streamWriter.write(BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE) +
+							String.format(Locale.US, formatString, 1) + String.format(Locale.US, formatString, 0) + message +
 							HotspotManagerService.MESSAGE_DELIMITER_STRING);
 					streamWriter.flush();
 					return true;
 				} else {
-					List<String> messageParts = BroadcastMessage.splitEqually(message, HotspotManagerService
-							.MESSAGE_PAYLOAD_SIZE);
+					List<String> messageParts = BroadcastMessage.splitEqually(message,
+							HotspotManagerService.MESSAGE_PAYLOAD_SIZE);
 					int totalParts = messageParts.size();
 					int partSizeLimit = (int) Math.pow(10, HotspotManagerService.MESSAGE_PART_COUNT_SIZE) - 1;
 					if (totalParts < partSizeLimit) {
@@ -64,8 +62,9 @@ abstract class RemoteConnection implements Runnable {
 						String messageId = BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE);
 						int partNumber = 0;
 						for (String part : messageParts) {
-							streamWriter.write(messageId + totalPartsString + String.format(Locale.US, formatString, partNumber)
-									+ part + HotspotManagerService.MESSAGE_DELIMITER_STRING);
+							streamWriter.write(
+									messageId + totalPartsString + String.format(Locale.US, formatString, partNumber) + part +
+											HotspotManagerService.MESSAGE_DELIMITER_STRING);
 							partNumber += 1;
 						}
 						streamWriter.flush();

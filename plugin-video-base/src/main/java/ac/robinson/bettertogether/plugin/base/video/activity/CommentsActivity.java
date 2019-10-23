@@ -18,9 +18,6 @@ package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +37,9 @@ import ac.robinson.bettertogether.api.BasePluginActivity;
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.plugin.base.video.R;
 import ac.robinson.bettertogether.plugin.base.video.youtube.MessageType;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class CommentsActivity extends BasePluginActivity {
 
@@ -54,7 +54,7 @@ public class CommentsActivity extends BasePluginActivity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.mode_youtube_comments);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -62,8 +62,8 @@ public class CommentsActivity extends BasePluginActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mListView = (ListView) findViewById(R.id.comments_list);
-		mProgressIndicator = (ProgressBar) findViewById(R.id.comments_progress_indicator);
+		mListView = findViewById(R.id.comments_list);
+		mProgressIndicator = findViewById(R.id.comments_progress_indicator);
 
 		if (savedInstanceState != null) {
 			mCurrentComments = savedInstanceState.getString("mCurrentComments");
@@ -146,8 +146,8 @@ public class CommentsActivity extends BasePluginActivity {
 			if (convertView == null) {
 				currentView = getLayoutInflater().inflate(R.layout.youtube_comment_list_item, parent, false);
 				commentHolder = new YouTubeCommentHolder();
-				commentHolder.mAuthor = (TextView) currentView.findViewById(R.id.comment_author);
-				commentHolder.mComment = (TextView) currentView.findViewById(R.id.comment_text);
+				commentHolder.mAuthor = currentView.findViewById(R.id.comment_author);
+				commentHolder.mComment = currentView.findViewById(R.id.comment_text);
 				currentView.setTag(commentHolder);
 			} else {
 				currentView = convertView;

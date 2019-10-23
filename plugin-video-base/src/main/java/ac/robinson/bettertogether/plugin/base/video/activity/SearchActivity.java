@@ -17,9 +17,6 @@
 package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,6 +32,9 @@ import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.plugin.base.video.R;
 import ac.robinson.bettertogether.plugin.base.video.youtube.MessageType;
 import ac.robinson.bettertogether.plugin.base.video.youtube.YouTubeVideoArrayAdapter;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class SearchActivity extends BasePluginActivity {
 
@@ -50,7 +50,7 @@ public class SearchActivity extends BasePluginActivity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.mode_youtube_search);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -58,9 +58,9 @@ public class SearchActivity extends BasePluginActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mListView = (ListView) findViewById(R.id.search_results_list);
-		mProgressIndicator = (ProgressBar) findViewById(R.id.search_results_progress_indicator);
-		mSearchQuery = (EditText) findViewById(R.id.search_query);
+		mListView = findViewById(R.id.search_results_list);
+		mProgressIndicator = findViewById(R.id.search_results_progress_indicator);
+		mSearchQuery = findViewById(R.id.search_query);
 
 		mSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override

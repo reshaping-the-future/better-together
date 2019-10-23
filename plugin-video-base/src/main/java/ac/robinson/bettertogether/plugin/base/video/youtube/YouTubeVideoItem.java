@@ -22,8 +22,6 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 public class YouTubeVideoItem implements Parcelable {
 	public String mId;
 	public boolean mIsPlaylist;
@@ -93,7 +91,6 @@ public class YouTubeVideoItem implements Parcelable {
 			return new YouTubeVideoItem(in);
 		}
 
-		@SuppressFBWarnings("SUA_SUSPICIOUS_UNINITIALIZED_ARRAY")
 		public YouTubeVideoItem[] newArray(int size) {
 			return new YouTubeVideoItem[size];
 		}

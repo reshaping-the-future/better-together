@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,9 +33,9 @@ import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.api.messaging.PluginIntent;
 import ac.robinson.bettertogether.host.Plugin;
 import ac.robinson.bettertogether.host.PluginFinder;
+import androidx.appcompat.app.AppCompatActivity;
 
-public abstract class BaseHotspotActivity extends AppCompatActivity implements HotspotManagerServiceCommunicator
-		.HotspotServiceCallback {
+public abstract class BaseHotspotActivity extends AppCompatActivity implements HotspotManagerServiceCommunicator.HotspotServiceCallback {
 
 	private static final String TAG = "BaseHotspotActivity";
 
@@ -131,8 +130,9 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 				}
 			}
 
-			sendSystemMessage(HotspotManagerService.MSG_UPDATE_HOTSPOT, validatedInternalPlugin ? currentConnectionOptions
-					.getHotspotUrl() : hotspotUrl); // update plugin package in service - for inbuilt plugins need host package
+			sendSystemMessage(HotspotManagerService.MSG_UPDATE_HOTSPOT, validatedInternalPlugin ?
+					currentConnectionOptions.getHotspotUrl() : hotspotUrl); // update plugin package in service - for inbuilt
+			// plugins need host package
 			startActivity(intent);
 			finish(); // TODO: on slower devices do we need to wait until the new activity is definitely connected before this?
 		} catch (Exception ignored) {

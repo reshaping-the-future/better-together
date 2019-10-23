@@ -21,11 +21,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -56,6 +51,12 @@ import ac.robinson.bettertogether.host.PluginFinder;
 import ac.robinson.bettertogether.hotspot.BaseHotspotActivity;
 import ac.robinson.bettertogether.hotspot.ConnectionOptions;
 import ac.robinson.bettertogether.hotspot.HotspotManagerService;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.view.animation.AnimationUtils.loadAnimation;
 
@@ -99,25 +100,25 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 		updatePluginList(true);
 
 		setContentView(R.layout.activity_plugin_host);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		mPluginActivityView = (RecyclerView) findViewById(R.id.plugin_activities_view);
+		mPluginActivityView = findViewById(R.id.plugin_activities_view);
 		mPluginActivityView.setLayoutManager(new GridLayoutManager(PluginHostActivity.this, 2, GridLayoutManager.VERTICAL,
 				false));
 		mPluginActivityView.setHasFixedSize(true);
 		mPluginActivityView.setAdapter(mPluginActivityViewAdapter);
 		new GravitySnapHelper(Gravity.START, false, mPluginActivityViewAdapter).attachToRecyclerView(mPluginActivityView);
 
-		mPluginView = (RecyclerView) findViewById(R.id.plugin_view);
+		mPluginView = findViewById(R.id.plugin_view);
 		mPluginView.setLayoutManager(new LinearLayoutManager(PluginHostActivity.this, LinearLayoutManager.HORIZONTAL, false));
 		mPluginView.setHasFixedSize(true);
 		mPluginView.setAdapter(mPluginViewAdapter);
 		new GravitySnapHelper(Gravity.START, false, mPluginViewAdapter).attachToRecyclerView(mPluginView);
 
-		mFooter = (LinearLayout) findViewById(R.id.footer);
-		mFooterTextOpen = (TextView) findViewById(R.id.footer_text_open);
-		mFooterTextClosed = (TextView) findViewById(R.id.footer_text_closed);
+		mFooter = findViewById(R.id.footer);
+		mFooterTextOpen = findViewById(R.id.footer_text_open);
+		mFooterTextClosed = findViewById(R.id.footer_text_closed);
 
 		updateToolbarColours(mPluginTheme);
 	}
@@ -142,8 +143,8 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 				qrPopupWindow.setQRBitmap(BetterTogetherUtils.generateQrCode(getHotspotUrl()));
 				qrPopupWindow.showPopUp();
 
-				BroadcastMessage qrMessage = new BroadcastMessage(BroadcastMessage.TYPE_DEFAULT, HotspotManagerService
-						.SYSTEM_BROADCAST_EVENT_SHOW_QR_CODE);
+				BroadcastMessage qrMessage = new BroadcastMessage(BroadcastMessage.TYPE_DEFAULT,
+						HotspotManagerService.SYSTEM_BROADCAST_EVENT_SHOW_QR_CODE);
 				qrMessage.setSystemMessage();
 				sendBroadcastMessage(qrMessage);
 				return true;
@@ -190,8 +191,8 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					try {
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(PluginIntent.MARKET_PACKAGE_QUERY +
-								currentPluginPackage));
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+								PluginIntent.MARKET_PACKAGE_QUERY + currentPluginPackage));
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
 					} catch (Exception e) {
@@ -208,21 +209,19 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 		// note: would be better to use plugin.hasTheme() here, but would require holding plugin in memory for no other reason
 		if (pluginTheme == 0) {
 			// fall back to default theme colours - could set these in XML, but then the theme wouldn't override them
-			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+			Toolbar toolbar = findViewById(R.id.toolbar);
 			if (toolbar != null) {
 				Resources resources = getResources();
-				//noinspection deprecation (we're targeting an SDK version before getColor(int, Theme) is available)
 				toolbar.setBackgroundColor(resources.getColor(R.color.bettertogether_primary));
-				//noinspection deprecation (we're targeting an SDK version before getColor(int, Theme) is available)
 				toolbar.setTitleTextColor(resources.getColor(R.color.bettertogether_text));
 			}
 		} else {
-			mFooterTextOpen.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme, R.attr
-					.colorPrimary));
-			mFooterTextClosed.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme, R.attr
-					.colorPrimary));
-			mPluginView.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme, R.attr
-					.colorButtonNormal));
+			mFooterTextOpen.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme,
+					R.attr.colorPrimary));
+			mFooterTextClosed.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme,
+					R.attr.colorPrimary));
+			mPluginView.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme,
+					R.attr.colorButtonNormal));
 		}
 	}
 
@@ -304,8 +303,9 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 
 					@Override
 					public void onAnimationEnd(Animation animation) {
-						RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams
-								.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+						RelativeLayout.LayoutParams lp =
+								new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+										RelativeLayout.LayoutParams.MATCH_PARENT);
 						lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
 						lp.addRule(RelativeLayout.ABOVE, R.id.footer);
 						mPluginActivityView.setLayoutParams(lp);
@@ -328,8 +328,9 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 					@Override
 					public void onAnimationEnd(Animation animation) {
 						mFooter.setVisibility(View.GONE);
-						RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams
-								.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+						RelativeLayout.LayoutParams lp =
+								new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+										RelativeLayout.LayoutParams.MATCH_PARENT);
 						lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
 						lp.addRule(RelativeLayout.ABOVE, R.id.footer_text_closed);
 						mPluginActivityView.setLayoutParams(lp);
@@ -347,8 +348,7 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 		}
 	}
 
-	private class PluginActivityAdapter extends RecyclerView.Adapter<PluginActivityAdapter.PluginActivityViewHolder> implements
-			GravitySnapHelper.SnapListener {
+	private class PluginActivityAdapter extends RecyclerView.Adapter<PluginActivityAdapter.PluginActivityViewHolder> implements GravitySnapHelper.SnapListener {
 		private List<PluginActivity> mActivities;
 
 		PluginActivityAdapter() {
@@ -365,10 +365,11 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 			notifyDataSetChanged();
 		}
 
+		@NonNull
 		@Override
 		public PluginActivityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-			return new PluginActivityViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_activities,
-					parent, false));
+			return new PluginActivityViewHolder(LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.list_activities, parent, false));
 		}
 
 		@Override
@@ -394,7 +395,7 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 			PluginActivityViewHolder(View itemView) {
 				super(itemView);
 				itemView.setOnClickListener(this);
-				mTextView = (TextView) itemView.findViewById(R.id.activity_label);
+				mTextView = itemView.findViewById(R.id.activity_label);
 			}
 
 			@Override

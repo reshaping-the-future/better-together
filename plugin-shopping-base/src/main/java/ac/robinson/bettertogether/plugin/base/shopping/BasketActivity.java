@@ -16,13 +16,7 @@
 
 package ac.robinson.bettertogether.plugin.base.shopping;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -35,6 +29,11 @@ import android.widget.RelativeLayout;
 import java.util.LinkedList;
 
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 
 public class BasketActivity extends BaseShoppingActivity {
@@ -55,7 +54,7 @@ public class BasketActivity extends BaseShoppingActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_basket);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
@@ -63,24 +62,22 @@ public class BasketActivity extends BaseShoppingActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		mBasketImage = (ImageView) findViewById(R.id.basket_image);
+		mBasketImage = findViewById(R.id.basket_image);
 		mBasketImage.setOnTouchListener(mOnTouchListener);
 
 		mBasketItemsViewAdapter = new BasketItemsAdapter();
-		mBasketItemsView = (RecyclerView) findViewById(R.id.basket_items);
-		mBasketItemsView.setLayoutManager(new VariableColumnGridLayoutManager(BasketActivity.this, getResources()
-				.getDimensionPixelSize(R.dimen.item_size)));
+		mBasketItemsView = findViewById(R.id.basket_items);
+		mBasketItemsView.setLayoutManager(new VariableColumnGridLayoutManager(BasketActivity.this,
+				getResources().getDimensionPixelSize(R.dimen.item_size)));
 		mBasketItemsView.setAdapter(mBasketItemsViewAdapter);
 		mBasketItemsView.setOnTouchListener(mOnTouchListener);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			RecyclerView.ItemAnimator animator = new FadeInAnimator();
-			animator.setAddDuration(250);
-			animator.setRemoveDuration(50);
-			animator.setMoveDuration(100);
-			animator.setChangeDuration(250);
-			mBasketItemsView.setItemAnimator(animator);
-		}
+		RecyclerView.ItemAnimator animator = new FadeInAnimator();
+		animator.setAddDuration(250);
+		animator.setRemoveDuration(50);
+		animator.setMoveDuration(100);
+		animator.setChangeDuration(250);
+		mBasketItemsView.setItemAnimator(animator);
 
 		if (savedInstanceState != null) {
 			String[] savedBasketItems = TextUtils.split(savedInstanceState.getString("mBasketItems"), ",");
@@ -202,7 +199,7 @@ public class BasketActivity extends BaseShoppingActivity {
 
 			BasketViewHolder(View view) {
 				super(view);
-				mItem = (ImageView) view.findViewById(R.id.basket_item);
+				mItem = view.findViewById(R.id.basket_item);
 			}
 		}
 	}

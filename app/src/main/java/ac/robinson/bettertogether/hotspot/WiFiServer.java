@@ -16,7 +16,6 @@
 
 package ac.robinson.bettertogether.hotspot;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,6 +34,7 @@ import ac.robinson.bettertogether.BetterTogetherUtils;
 import ac.robinson.bettertogether.event.EventType;
 import ac.robinson.bettertogether.event.ServerErrorEvent;
 import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
+import androidx.annotation.Nullable;
 
 class WifiServer implements Runnable {
 
@@ -87,8 +87,9 @@ class WifiServer implements Runnable {
 	}
 
 	void sendMessageToAll(String message, @Nullable String ignoreClient) {
-		for (Iterator<Map.Entry<String, WifiServerConnection>> connectedSocketsIterator = mConnectedSockets.entrySet().iterator
-				(); connectedSocketsIterator.hasNext(); ) {
+		for (Iterator<Map.Entry<String, WifiServerConnection>> connectedSocketsIterator =
+			 mConnectedSockets.entrySet().iterator();
+			 connectedSocketsIterator.hasNext(); ) {
 			Map.Entry<String, WifiServerConnection> connection = connectedSocketsIterator.next();
 			if (!connection.getKey().equals(ignoreClient)) { // send to all except the single ignored client
 				if (!connection.getValue().sendMessage(message)) {

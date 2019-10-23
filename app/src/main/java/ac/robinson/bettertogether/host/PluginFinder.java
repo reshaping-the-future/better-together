@@ -21,8 +21,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -36,6 +34,8 @@ import java.util.Map;
 import java.util.Set;
 
 import ac.robinson.bettertogether.api.messaging.PluginIntent;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class PluginFinder {
 
@@ -46,14 +46,14 @@ public class PluginFinder {
 	private static final String INTERNAL_EXTRA_PLUGIN_LABEL = "ac.robinson.bettertogether.intent.extra.PLUGIN_LABEL";
 
 	// @formatter:off
-	public static final Set<String> INTERNAL_PLUGIN_PACKAGES =  Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[]{
-		"ac.robinson.bettertogether.plugin.base.video",
-		"ac.robinson.bettertogether.plugin.base.shopping"
-	})));
-	private static final Set<String> OVERRIDE_PLUGIN_PACKAGES =  Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[]{
-		"ac.robinson.bettertogether.plugin.video",
-		"ac.robinson.bettertogether.plugin.shopping"
-	})));
+	public static final Set<String> INTERNAL_PLUGIN_PACKAGES =  Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			"ac.robinson.bettertogether.plugin.base.video",
+			"ac.robinson.bettertogether.plugin.base.shopping"
+	)));
+	private static final Set<String> OVERRIDE_PLUGIN_PACKAGES =  Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+			"ac.robinson.bettertogether.plugin.video",
+			"ac.robinson.bettertogether.plugin.shopping"
+	)));
 	// @formatter:on
 
 	private static final String TAG = "PluginFinder";
@@ -140,10 +140,10 @@ public class PluginFinder {
 				if (activityMetaData != null) {
 					// check whether the plugin requires wifi (in which case we connect phones using bluetooth) or bluetooth (we
 					// use wifi) - behaviour is undefined if plugins require both
-					plugin.setRequiresWifi(plugin.getRequiresWifi() || activityMetaData.getBoolean(PluginIntent
-							.EXTRA_REQUIRES_WIFI));
-					plugin.setRequiresBluetooth(plugin.getRequiresBluetooth() || activityMetaData.getBoolean(PluginIntent
-							.EXTRA_REQUIRES_BLUETOOTH));
+					plugin.setRequiresWifi(
+							plugin.getRequiresWifi() || activityMetaData.getBoolean(PluginIntent.EXTRA_REQUIRES_WIFI));
+					plugin.setRequiresBluetooth(
+							plugin.getRequiresBluetooth() || activityMetaData.getBoolean(PluginIntent.EXTRA_REQUIRES_BLUETOOTH));
 
 					// special case for default plugins - load theme/icon/label separately (can't get from main application - us)
 					// (only one activity in each plugin needs to have these items)
@@ -174,8 +174,8 @@ public class PluginFinder {
 		return validPlugins;
 	}
 
-	private static List<ResolveInfo> findPluginActivities(@NonNull PackageManager packageManager, @Nullable String
-			specificPackage) {
+	private static List<ResolveInfo> findPluginActivities(@NonNull PackageManager packageManager,
+														  @Nullable String specificPackage) {
 		final android.content.Intent activityIntent = new android.content.Intent(PluginIntent.ACTION_LAUNCH_PLUGIN);
 		if (!TextUtils.isEmpty(specificPackage)) {
 			activityIntent.setPackage(specificPackage);

@@ -71,14 +71,14 @@ class HotspotManagerServiceCommunicator {
 
 			switch (msg.what) {
 				case HotspotManagerService.MSG_BROADCAST:
-					BroadcastMessage message = (BroadcastMessage) msg.getData().getSerializable(PluginIntent
-							.KEY_BROADCAST_MESSAGE);
+					BroadcastMessage message = (BroadcastMessage) msg.getData()
+							.getSerializable(PluginIntent.KEY_BROADCAST_MESSAGE);
 					mCommunicator.mCallback.onBroadcastMessageReceived(message);
 					break;
 
 				default:
-					mCommunicator.mCallback.onSystemMessageReceived(msg.what, msg.getData().getString(PluginIntent
-							.KEY_SERVICE_MESSAGE));
+					mCommunicator.mCallback.onSystemMessageReceived(msg.what, msg.getData()
+							.getString(PluginIntent.KEY_SERVICE_MESSAGE));
 					break;
 			}
 		}

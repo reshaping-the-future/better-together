@@ -17,8 +17,9 @@
 package ac.robinson.bettertogether.plugin.base.shopping;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 // see: http://stackoverflow.com/a/31154956
 // note: this doesn't do quite do what we want (variable width columns *and* items to keep everything on-screen)
