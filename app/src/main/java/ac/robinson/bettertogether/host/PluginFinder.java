@@ -149,23 +149,25 @@ public class PluginFinder {
 					// (only one activity in each plugin needs to have these items)
 					if (isDefaultPlugin) {
 						String pluginTheme = activityMetaData.getString(PluginIntent.EXTRA_PLUGIN_THEME);
-						if (!plugin.setTheme(pluginTheme)) {
-							Log.d(TAG, "Default plugin " + activity.activityInfo.name + " error: invalid or missing theme - " +
-									"continuing with default");
+						if (!TextUtils.isEmpty(pluginTheme)) {
+							plugin.setTheme(pluginTheme);
+						// } else {
+							// Log.d(TAG, "Default plugin " + activity.activityInfo.name + " error: invalid or missing theme - " +
+							// 		"continuing with default");
 						}
 						int inbuiltPluginIcon = activityMetaData.getInt(INTERNAL_EXTRA_PLUGIN_ICON);
 						if (inbuiltPluginIcon != 0) {
 							plugin.setInbuiltPluginIcon(inbuiltPluginIcon);
-						} else {
-							Log.d(TAG, "Default plugin " + activity.activityInfo.name + " error: invalid or missing icon - " +
-									"continuing with default");
+						// } else {
+							// Log.d(TAG, "Default plugin " + activity.activityInfo.name + " error: invalid or missing icon - " +
+							// 		"continuing with default");
 						}
 						int inbuiltPluginLabel = activityMetaData.getInt(INTERNAL_EXTRA_PLUGIN_LABEL);
 						if (inbuiltPluginLabel != 0) {
 							plugin.setInbuiltPluginLabel(context.getString(inbuiltPluginLabel));
-						} else {
-							Log.d(TAG, "Default plugin " + activity.activityInfo.name + " error: invalid or missing label - " +
-									"continuing with default");
+						// } else {
+							// Log.d(TAG, "Default plugin " + activity.activityInfo.name + " error: invalid or missing label - " +
+							// 		"continuing with default");
 						}
 					}
 				}

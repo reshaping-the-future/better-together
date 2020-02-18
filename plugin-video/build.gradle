@@ -7,8 +7,8 @@ android {
 		applicationId 'ac.robinson.bettertogether.plugin.video'
 		minSdkVersion 14
 		targetSdkVersion 28
-		versionCode 1
-		versionName '1.0'
+		versionCode appVersionCode
+		versionName appAndAPIVersionName // app version tracks API version
 		resConfigs 'en'
 	}
 

@@ -19,6 +19,58 @@
 	package="ac.robinson.bettertogether"
 	android:installLocation="auto">
 
+	<permission
+		android:name="ac.robinson.bettertogether.permission.BETTER_TOGETHER"
+		android:protectionLevel="normal" />
+
+	<!-- for wifi-based communication -->
+	<uses-permission android:name="android.permission.INTERNET" />
+
+	<!-- for enabling/disabling wifi and setting up hotspots - maxSdkVersion is because from N (SDK 24) this is not possible -->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission
+		android:name="android.permission.WRITE_SETTINGS"
+		android:maxSdkVersion="24"
+		tools:ignore="ProtectedPermissions" /><!-- not required after v24 as hotspots can no-longer be created by apps -->
+
+	<!-- for bluetooth-based communication -->
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+	<!-- for barcode scanning (note: already in merged manifest, but included here for clarity) -->
+	<uses-permission android:name="android.permission.CAMERA" />
+
+	<!-- don't require camera, as this requires a rear camera - this allows it to work on any camera (front or back) -->
+	<uses-feature
+		android:name="android.hardware.camera"
+		android:required="false" />
+	<uses-feature
+		android:name="android.hardware.camera.front"
+		android:required="false" />
+	<uses-feature
+		android:name="android.hardware.camera.autofocus"
+		android:required="false" />
+	<uses-feature
+		android:name="android.hardware.camera.flash"
+		android:required="false" />
+
+	<uses-feature
+		android:name="android.hardware.wifi"
+		android:required="false" />
+	<uses-feature
+		android:name="android.hardware.bluetooth"
+		android:required="false" />
+	<uses-feature
+		android:name="android.hardware.location"
+		android:required="false" />
+	<uses-feature
+		android:name="android.hardware.location.network"
+		android:required="false" />
+
 	<application
 		android:name=".BetterTogetherApplication"
 		android:allowBackup="true"
@@ -31,6 +83,7 @@
 		<activity
 			android:name=".ConnectionSetupActivity"
 			android:label="@string/app_name"
+			android:launchMode="singleTask"
 			android:windowSoftInputMode="stateAlwaysHidden">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -44,6 +97,9 @@
 			android:label="@string/app_name" />
 
 		<!-- communication between devices -->
+		<service android:name=".hotspot.HotspotManagerService" />
+
+		<!-- demo/built-in plugin: shopping -->
 		<activity
 			android:name=".plugin.base.shopping.BasketActivity"
 			android:exported="true"
@@ -51,10 +107,10 @@
 			android:label="@string/basket_activity_name"
 			android:theme="@style/BetterTogether.PluginStyle.deep_purple">
 			<!-- these meta-data elements are only required for built-in plugins - external plugins can omit these -->
-			<!-- (external plugins only need meta data at the application level) -->			<intent-filter>
-			<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-		</intent-filter>
-
+			<!-- (external plugins only need meta data at the application level) -->
+			<meta-data
+				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
+				android:value="ac.robinson.bettertogether.plugin.base.shopping" />
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_THEME"
 				android:value="deep_purple" />
@@ -65,24 +121,23 @@
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_LABEL"
 				android:resource="@string/shopping_plugin_name" />
 
-			<meta-data
-				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
-				android:value="ac.robinson.bettertogether.plugin.base.shopping" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
-		<!-- demo/built-in plugin: shopping -->
 		<activity
 			android:name=".plugin.base.shopping.CategoryActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_layers_deep_purple_800_48dp"
 			android:label="@string/category_activity_name"
 			android:theme="@style/BetterTogether.PluginStyle.deep_purple">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.shopping" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
 		<activity
@@ -91,14 +146,15 @@
 			android:icon="@drawable/ic_dashboard_deep_purple_800_48dp"
 			android:label="@string/item_activity_name"
 			android:theme="@style/BetterTogether.PluginStyle.deep_purple">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.shopping" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
+		<!-- demo/built-in plugin: video -->
 		<activity
 			android:name=".plugin.base.video.activity.VideoActivity"
 			android:exported="true"
@@ -106,10 +162,10 @@
 			android:label="@string/mode_youtube_videos"
 			android:theme="@style/BetterTogether.PluginStyle.red">
 			<!-- these meta-data elements are only required for built-in plugins - external plugins can omit these -->
-			<!-- (external plugins only need meta data at the application level) -->			<intent-filter>
-			<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-		</intent-filter>
-
+			<!-- (external plugins only need meta data at the application level) -->
+			<meta-data
+				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
+				android:value="ac.robinson.bettertogether.plugin.base.video" />
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_THEME"
 				android:value="red" />
@@ -120,24 +176,23 @@
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_LABEL"
 				android:resource="@string/video_plugin_name" />
 
-			<meta-data
-				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
-				android:value="ac.robinson.bettertogether.plugin.base.video" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
-		<!-- demo/built-in plugin: video -->
 		<activity
 			android:name=".plugin.base.video.activity.ControlsActivity"
 			android:exported="true"
 			android:icon="@drawable/ic_play_arrow_red_800_48dp"
 			android:label="@string/mode_youtube_controls"
 			android:theme="@style/BetterTogether.PluginStyle.red">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.video" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
 		<activity
@@ -146,12 +201,12 @@
 			android:icon="@drawable/ic_search_red_800_48dp"
 			android:label="@string/mode_youtube_search"
 			android:theme="@style/BetterTogether.PluginStyle.red">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.video" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
 		<activity
@@ -160,12 +215,12 @@
 			android:icon="@drawable/ic_playlist_play_red_800_48dp"
 			android:label="@string/mode_youtube_playlist"
 			android:theme="@style/BetterTogether.PluginStyle.red">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.video" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
 		<activity
@@ -174,12 +229,12 @@
 			android:icon="@drawable/ic_question_answer_red_800_48dp"
 			android:label="@string/mode_youtube_comments"
 			android:theme="@style/BetterTogether.PluginStyle.red">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.video" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
 
 		<activity
@@ -188,67 +243,13 @@
 			android:icon="@drawable/ic_subscriptions_red_800_48dp"
 			android:label="@string/mode_youtube_related_videos"
 			android:theme="@style/BetterTogether.PluginStyle.red">
-			<intent-filter>
-				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
-			</intent-filter>
 			<meta-data
 				android:name="ac.robinson.bettertogether.intent.extra.PLUGIN_PACKAGE"
 				android:value="ac.robinson.bettertogether.plugin.base.video" />
+			<intent-filter>
+				<action android:name="ac.robinson.bettertogether.intent.action.LAUNCH_PLUGIN" />
+			</intent-filter>
 		</activity>
-
-		<service android:name=".hotspot.HotspotManagerService" />
 	</application>
-
-	<!-- for wifi-based communication -->
-	<permission
-		android:name="ac.robinson.bettertogether.permission.BETTER_TOGETHER"
-		android:protectionLevel="normal" />
-
-	<!-- for enabling/disabling wifi and setting up hotspots - maxSdkVersion is because from N (SDK 24) this is not possible -->
-	<uses-feature
-		android:name="android.hardware.camera"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.camera.front"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.camera.autofocus"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.camera.flash"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.wifi"
-		android:required="false" /><!-- not required after v24 as hotspots can no-longer be created by apps -->
-
-	<!-- for bluetooth-based communication -->
-	<uses-feature
-		android:name="android.hardware.bluetooth"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.location"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.location.network"
-		android:required="false" />
-
-	<!-- for barcode scanning (note: already in merged manifest, but included here for clarity) -->
-	<uses-permission android:name="android.permission.INTERNET" />
-
-	<!-- don't require camera, as this requires a rear camera - this allows it to work on any camera (front or back) -->
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-	<uses-permission
-		android:name="android.permission.WRITE_SETTINGS"
-		android:maxSdkVersion="24"
-		tools:ignore="ProtectedPermissions" />
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-	<uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

@@ -1,10 +1,15 @@
 buildscript {
+	ext {
+		// these are global so that the app and base plugins all have the same version code and track the same API version number
+		appVersionCode = 5
+		appAndAPIVersionName = '1.0.3'
+	}
 	repositories {
 		jcenter()
 		google()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.5.1'
+		classpath 'com.android.tools.build:gradle:3.5.3'
 	}
 }
 

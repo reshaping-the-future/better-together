@@ -247,7 +247,7 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 
 			case HotspotManagerService.EVENT_LOCAL_CLIENT_ERROR:
 			case HotspotManagerService.EVENT_DEVICE_DISCONNECTED:
-				if (!isFinishing()) {
+				if (!mIsConnectionHost && !isFinishing()) {
 					Intent intent = new Intent(PluginHostActivity.this, ConnectionSetupActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.putExtra(ConnectionSetupActivity.RECONNECT_EXISTING_HOTSPOT, getHotspotUrl());

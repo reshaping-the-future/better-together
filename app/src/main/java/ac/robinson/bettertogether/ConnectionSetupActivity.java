@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -47,6 +48,7 @@ import com.journeyapps.barcodescanner.CompoundBarcodeView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
 import ac.robinson.bettertogether.api.messaging.PluginIntent;
@@ -95,7 +97,28 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// only show this activity if actually intended (i.e., opened via launcher with no other activities in foreground);
+		// ConnectionSetupActivity does not remain active while plugins are being used
+		if (savedInstanceState == null) {
+			Activity activity = ((BetterTogetherApplication) getApplication()).getActiveActivity();
+			if (activity != null && activity != ConnectionSetupActivity.this) {
+				Intent intent = getIntent();
+				Set<String> categories = null;
+				if (intent != null) {
+					categories = intent.getCategories();
+				}
+				if (categories != null && categories.contains(Intent.CATEGORY_LAUNCHER)) {
+					finish(); // the app has come to the front; now exit and leave the previous activity here
+				}
+			}
+		}
+
 		super.onCreate(savedInstanceState);
+
+		if (isFinishing()) {
+			return;
+		}
+
 		setContentView(R.layout.activity_connection_setup);
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -144,6 +167,15 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 		}
 
 		updatePluginList();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// when launching from the API's DefaultActivity, we get an onNewIntent event if the ConnectionSetupActivity is already
+		// running - in this case there is nothing to do as we have already been resumed; normally this is not the case, as the
+		// main action happens within a plugin, in which case we bring that activity to the front (see start of onCreate)
+		super.onNewIntent(intent);
+		setIntent(intent);
 	}
 
 	@Override
@@ -290,7 +322,13 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 			case HotspotManagerService.EVENT_DEVICE_CONNECTED:
 				Log.d(TAG, "New device connected");
 				if (!isFinishing()) {
-					ConnectionOptions currentConnectionOptions = ConnectionOptions.fromHotspotUrl(getHotspotUrl());
+					String hotspotUrl = getHotspotUrl();
+					if (TextUtils.isEmpty(hotspotUrl)) {
+						Log.e(TAG, "Null hotspot URL - ignoring");
+						break; // TODO: temporarily working around connectivity bug caused by relaunching activity
+					}
+
+					ConnectionOptions currentConnectionOptions = ConnectionOptions.fromHotspotUrl(hotspotUrl);
 					boolean isInbuiltPlugin = false;
 					if (currentConnectionOptions != null) {
 						if (PluginFinder.INTERNAL_PLUGIN_PACKAGES.contains(currentConnectionOptions.mPluginPackage)) {
@@ -298,7 +336,7 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 						}
 					}
 
-					launchPluginAndFinish(getHotspotUrl(), isInbuiltPlugin);
+					launchPluginAndFinish(hotspotUrl, isInbuiltPlugin);
 				}
 				break;
 

@@ -6,8 +6,8 @@ android {
 	defaultConfig {
 		minSdkVersion 14
 		targetSdkVersion 28
-		versionCode 1
-		versionName '1.0'
+		versionCode appVersionCode
+		versionName appAndAPIVersionName // app version tracks API version
 		consumerProguardFiles 'proguard-rules.pro'
 		resConfigs 'en'
 	}
@@ -17,9 +17,10 @@ dependencies {
 	implementation 'androidx.appcompat:appcompat:1.1.0'
 
 	implementation 'com.amitshekhar.android:android-networking:1.0.2' // for http requests (built on OKHttp)
-	implementation files('libs/YouTubeAndroidPlayerApi.jar')
-	implementation 'com.google.apis:google-api-services-youtube:v3-rev164-1.21.0'
-	// much larger resulting APK size than .jar above
 
-	implementation 'ac.robinson.bettertogether:api:1.0.1' // the Better Together communication API
+	// this YouTube import gives a larger APK than the .jar, but is a direct replacement if needed (jar is not in repository)
+	// implementation 'com.google.apis:google-api-services-youtube:v3-rev164-1.21.0'
+	implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
+	implementation "ac.robinson.bettertogether:api:$appAndAPIVersionName" // the Better Together communication API
 }

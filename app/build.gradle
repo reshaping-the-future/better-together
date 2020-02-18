@@ -7,8 +7,8 @@ android {
 		applicationId 'ac.robinson.bettertogether'
 		minSdkVersion 14
 		targetSdkVersion 28
-		versionCode 2
-		versionName '1.0'
+		versionCode appVersionCode
+		versionName appAndAPIVersionName // app version tracks API version
 		resConfigs 'en'
 	}
 
@@ -23,12 +23,13 @@ android {
 
 dependencies {
 	implementation 'androidx.appcompat:appcompat:1.1.0'
-	implementation 'androidx.recyclerview:recyclerview:1.0.0'
+	implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+	implementation 'androidx.recyclerview:recyclerview:1.1.0'
 	implementation 'androidx.cardview:cardview:1.0.0'
 
 	implementation 'com.github.rubensousa:gravitysnaphelper:1.1' // for snapping RecyclerViews to start
-	implementation 'org.greenrobot:eventbus:3.1.1' // for messages between components
-	implementation 'ac.robinson.bettertogether:api:1.0.1' // the Better Together communication API
+	implementation 'org.greenrobot:eventbus:3.2.0' // for messages between components
+	implementation "ac.robinson.bettertogether:api:$appAndAPIVersionName" // the Better Together communication API
 
 	// for simple ZXing integration (includes zxing core for creating QRs)
 	implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }

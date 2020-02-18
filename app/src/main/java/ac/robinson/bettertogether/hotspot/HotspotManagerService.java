@@ -768,18 +768,18 @@ public class HotspotManagerService extends Service {
 					if (mService.mHotspotMode) {
 						if (mService.mWifiServer != null || mService.mBluetoothServer != null) {
 							mService.sendSystemMessageToAllLocalClients(EVENT_DEVICE_CONNECTED, ROLE_SERVER);
-							Log.d(TAG, "Sending status: connected");
+							Log.d(TAG, "Sending server status: connected");
 						} else {
 							mService.sendSystemMessageToAllLocalClients(EVENT_DEVICE_DISCONNECTED, null);
-							Log.d(TAG, "Sending status: not connected");
+							Log.d(TAG, "Sending server status: not connected");
 						}
 					} else {
 						if (mService.mWifiClient != null || mService.mBluetoothClient != null) {
 							mService.sendSystemMessageToAllLocalClients(EVENT_DEVICE_CONNECTED, ROLE_CLIENT);
-							Log.d(TAG, "Sending status: connected");
+							Log.d(TAG, "Sending client status: connected");
 						} else {
 							mService.sendSystemMessageToAllLocalClients(EVENT_DEVICE_DISCONNECTED, null);
-							Log.d(TAG, "Sending status: not connected");
+							Log.d(TAG, "Sending client status: not connected");
 						}
 					}
 					break;

@@ -48,6 +48,10 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (isFinishing()) {
+			return; // received a request to bring the main activity to the front - this activity will finish, so nothing to do
+		}
+
 		mServiceCommunicator = new HotspotManagerServiceCommunicator(BaseHotspotActivity.this);
 		mServiceCommunicator.bindService(BaseHotspotActivity.this);
 
@@ -76,6 +80,9 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
+			if (TextUtils.isEmpty(action)) {
+				return;
+			}
 			switch (action) {
 				case Intent.ACTION_PACKAGE_ADDED: // TODO: do we get both REPLACED and ADDED when replacing?
 				case Intent.ACTION_PACKAGE_CHANGED:
@@ -167,7 +174,10 @@ public abstract class BaseHotspotActivity extends AppCompatActivity implements H
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(mPackageEventReceiver);
+		try {
+			unregisterReceiver(mPackageEventReceiver);
+		} catch (IllegalArgumentException ignored) {
+		}
 		if (mServiceCommunicator != null) {
 			mServiceCommunicator.unbindService(BaseHotspotActivity.this, !isFinishing());  // don't kill service on rotation
 		}
