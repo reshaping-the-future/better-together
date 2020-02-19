@@ -77,8 +77,11 @@ public class PluginAdapter extends RecyclerView.Adapter<PluginAdapter.PluginView
 		Plugin plugin = mPlugins.get(position);
 		holder.mTextView.setText(plugin.getFilteredPluginLabel(mContext));
 		if (EMPTY_PACKAGE.equals(plugin.getPackageName())) {
-			holder.mTextView.setCompoundDrawablesWithIntrinsicBounds(null, mContext.getResources()
-					.getDrawable(R.drawable.ic_add_grey_900_48dp), null, null);
+			// TODO: displaying the drawable at the bottom rather than the top, and adjusting card height is a hack to work
+			// TODO: around the platform's getIcon functionality returning different sizes depending on whether the legacy
+			// TODO: or adaptive icon is used - can we address this in a better way? (but without setting a fixed size...)
+			holder.mTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, mContext.getResources()
+					.getDrawable(R.drawable.ic_add_grey_900_48dp));
 			// holder.mTextView.setBackgroundDrawable(sDefaultBackground);
 		} else {
 			holder.mTextView.setCompoundDrawablesWithIntrinsicBounds(null, plugin.getIcon(mContext), null, null);

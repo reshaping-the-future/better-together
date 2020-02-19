@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 The Better Together Toolkit
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="3267.442"
+    android:viewportHeight="3267.442">
+  <group android:translateX="955.72095"
+      android:translateY="931.22095">
+    <path
+        android:pathData="M974.52,537.16L868.26,537.16v-120.92l156.4,-0.76 -50.13,121.68zM914.35,686.15L868.26,686.15L868.26,583.01h87.75l-41.66,103.14zM868.26,790.34v-53.53h23.58l-23.58,53.53zM702.25,874.01L702.25,736.82h127.83l1.61,147.38 -129.44,-10.18zM664.43,537.16L549.67,537.16L549.67,424.02h114.75L664.42,537.16zM664.43,686.15L549.67,686.15L549.67,583.01h114.75v103.14zM664.43,871.09l-114.75,-8.85L549.68,736.82h114.75v134.28zM509.62,537.16L388.1,537.16v-109.32l121.52,-3.83L509.62,537.16zM509.62,686.15L388.1,686.15L388.1,583.01h121.52v103.14zM509.62,859.17L388.1,848.21L388.1,736.82h121.52v122.35zM347.02,537.16L226.93,537.16v-109.32h120.09v109.32zM347.02,848.21L226.93,836.05v-99.23h120.09v111.39zM189.03,537.16L84.12,537.16l-11.9,-107.81 116.81,-0.95L189.03,537.16zM189.03,686.15L102.47,686.15L89.76,583.01h99.27v103.14zM189.03,836.05l-67.47,-6.05 -12.23,-93.18h79.71v99.23zM226.93,583.01h120.09v103.14L226.93,686.15L226.93,583.01zM702.25,583.01L828.4,583.01l1.13,103.14L702.25,686.15L702.25,583.01zM702.25,421.21L826.6,416.24l1.31,120.92L702.25,537.16v-115.95zM1304.08,0.3l-104.12,32.06s-41.08,15.8 -41.08,44.24L1060.91,332.56 33.88,351.53S-3.49,373.65 0.27,405.25l49.41,453.22s6.32,52.4 75.85,52.4l701.55,53.72s180.13,126.39 167.48,167.48c-12.64,41.1 -63.21,28.45 -63.21,28.45l-859.55,1.84s-60.05,23.44 -37.92,61.36c22.12,37.91 31.6,31.6 50.56,34.76L918.71,1258.47s132.73,9.48 161.17,-91.65c0,0 9.48,-37.92 -18.97,-101.12L906.07,917.2l328.65,-809.01 100.96,-34.76s20.06,-2.08 20.06,-40.45c0,-38.38 -35.87,-32.68 -51.66,-32.68M203.77,1354.21c-11.96,0 -21.63,-9.67 -21.63,-21.63 0,-11.94 9.67,-21.63 21.63,-21.63 11.94,0 21.63,9.69 21.63,21.63 0,11.96 -9.69,21.63 -21.63,21.63m0,-93.74c-39.83,0 -72.12,32.3 -72.12,72.11 0,39.83 32.29,72.11 72.12,72.11 39.83,0 72.1,-32.29 72.1,-72.11 0,-39.82 -32.27,-72.11 -72.1,-72.11"
+        android:strokeLineJoin="round"
+        android:fillColor="#4a3594"
+        android:fillType="nonZero"/>
+    <path
+        android:pathData="M892.39,1354.21c-11.95,0 -21.63,-9.67 -21.63,-21.63 0,-11.94 9.68,-21.63 21.63,-21.63 11.96,0 21.63,9.69 21.63,21.63 0,11.96 -9.67,21.63 -21.63,21.63m0,-93.74c-39.82,0 -72.11,32.3 -72.11,72.11 0,39.83 32.29,72.11 72.11,72.11 39.83,0 72.12,-32.29 72.12,-72.11 0,-39.82 -32.29,-72.11 -72.12,-72.11"
+        android:strokeLineJoin="round"
+        android:fillColor="#4a3594"
+        android:fillType="nonZero"/>
+  </group>
+</vector>

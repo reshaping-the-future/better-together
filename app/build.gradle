@@ -27,13 +27,14 @@ dependencies {
 	implementation 'androidx.recyclerview:recyclerview:1.1.0'
 	implementation 'androidx.cardview:cardview:1.0.0'
 
-	implementation 'com.github.rubensousa:gravitysnaphelper:1.1' // for snapping RecyclerViews to start
+	implementation 'com.github.rubensousa:gravitysnaphelper:2.2.0' // for snapping RecyclerViews to start
 	implementation 'org.greenrobot:eventbus:3.2.0' // for messages between components
 	implementation "ac.robinson.bettertogether:api:$appAndAPIVersionName" // the Better Together communication API
 
-	// for simple ZXing integration (includes zxing core for creating QRs)
-	implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+	// for simple ZXing integration (includes zxing core for creating QRs) - not using latest version so we can support API 14+
+	//noinspection GradleDependency
 	implementation 'com.google.zxing:core:3.3.0'
+	implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
 
 	// include sample plugins
 	implementation project(path: ':plugin-video-base')
