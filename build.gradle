@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		// these are global so that the app and base plugins all have the same version code and track the same API version number
-		appVersionCode = 5
+		appVersionCode = 6
 		appAndAPIVersionName = '1.0.3'
 	}
 	repositories {
