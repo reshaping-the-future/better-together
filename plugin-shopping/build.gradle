@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 28
+	namespace 'ac.robinson.bettertogether.plugin.shopping'
+	compileSdkVersion 32
 
 	defaultConfig {
-		applicationId 'ac.robinson.bettertogether.plugin.shopping'
+		applicationId namespace
 		minSdkVersion 14
-		targetSdkVersion 28
+		targetSdkVersion 32
 		versionCode appVersionCode
 		versionName appAndAPIVersionName // app version tracks API version
 		resConfigs 'en'

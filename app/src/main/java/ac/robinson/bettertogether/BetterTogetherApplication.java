@@ -18,12 +18,11 @@ package ac.robinson.bettertogether;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
 import android.os.Bundle;
 
 import java.lang.ref.WeakReference;
 
-import ac.robinson.bettertogether.hotspot.HotspotManagerService;
+import androidx.annotation.NonNull;
 
 public class BetterTogetherApplication extends Application {
 
@@ -32,21 +31,20 @@ public class BetterTogetherApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		startService(new Intent(getBaseContext(), HotspotManagerService.class));
 		registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
 	}
 
-	private ActivityLifecycleCallbacks mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks() {
+	private final ActivityLifecycleCallbacks mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks() {
 		@Override
-		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+		public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
 		}
 
 		@Override
-		public void onActivityStarted(Activity activity) {
+		public void onActivityStarted(@NonNull Activity activity) {
 		}
 
 		@Override
-		public void onActivityResumed(Activity activity) {
+		public void onActivityResumed(@NonNull Activity activity) {
 			if (mFrontActivity != null) {
 				mFrontActivity.clear();
 			}
@@ -54,19 +52,19 @@ public class BetterTogetherApplication extends Application {
 		}
 
 		@Override
-		public void onActivityPaused(Activity activity) {
+		public void onActivityPaused(@NonNull Activity activity) {
 		}
 
 		@Override
-		public void onActivityStopped(Activity activity) {
+		public void onActivityStopped(@NonNull Activity activity) {
 		}
 
 		@Override
-		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+		public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
 		}
 
 		@Override
-		public void onActivityDestroyed(Activity activity) {
+		public void onActivityDestroyed(@NonNull Activity activity) {
 			if (mFrontActivity != null && mFrontActivity.get() == activity) {
 				mFrontActivity.clear();
 			}

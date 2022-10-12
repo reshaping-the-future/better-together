@@ -2,12 +2,27 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/better-together.iml" filepath="$PROJECT_DIR$/better-together.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plugin-shopping/plugin-shopping.iml" filepath="$PROJECT_DIR$/plugin-shopping/plugin-shopping.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plugin-shopping-base/plugin-shopping-base.iml" filepath="$PROJECT_DIR$/plugin-shopping-base/plugin-shopping-base.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plugin-video/plugin-video.iml" filepath="$PROJECT_DIR$/plugin-video/plugin-video.iml" />
-      <module fileurl="file://$PROJECT_DIR$/plugin-video-base/plugin-video-base.iml" filepath="$PROJECT_DIR$/plugin-video-base/plugin-video-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/better-together.iml" filepath="$PROJECT_DIR$/.idea/modules/better-together.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/better-together.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/better-together.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/better-together.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/better-together.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/better-together.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/better-together.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/better-together.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/better-together.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping-base/better-together.plugin-shopping-base.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.main.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-shopping/better-together.plugin-shopping.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video-base/better-together.plugin-video-base.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.main.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/plugin-video/better-together.plugin-video.unitTest.iml" />
     </modules>
   </component>
 </project>

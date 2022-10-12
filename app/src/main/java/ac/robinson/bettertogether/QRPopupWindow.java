@@ -63,8 +63,7 @@ class QRPopupWindow {
 		// could use mPopupWindow.getMaxAvailableHeight() if only there was a width version!
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
-		int popupSize = (int) Math.round((displayMetrics.widthPixels >
-				displayMetrics.heightPixels ? displayMetrics.heightPixels : displayMetrics.widthPixels) * 0.9);
+		int popupSize = (int) Math.round((Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels)) * 0.9);
 
 		// normally: WindowManager.LayoutParams.WRAP_CONTENT);
 		mPopupWindow.setWidth(popupSize);

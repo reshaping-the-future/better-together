@@ -66,7 +66,7 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 	private YouTubePlayerStateChangeListener mPlayerStateChangeListener;
 	private YouTubePlaybackEventListener mPlaybackEventListener;
 
-	private Handler mStateUpdateHandler = new Handler();
+	private final Handler mStateUpdateHandler = new Handler();
 	private static final int STATE_UPDATE_INTERVAL = 1000; // milliseconds
 
 	public static final String LOADING_JSON = "[{}]"; // hacky!
@@ -98,13 +98,8 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 		mPlayerView.initialize(DeveloperKey.DEVELOPER_KEY, this);
 	}
 
-	private PluginConnectionDelegate.PluginMessageCallback mMessageReceivedCallback =
-			new PluginConnectionDelegate.PluginMessageCallback() {
-		@Override
-		public void onMessageReceived(@NonNull BroadcastMessage message) {
-			VideoActivity.this.onMessageReceived(message);
-		}
-	};
+	private final PluginConnectionDelegate.PluginMessageCallback mMessageReceivedCallback =
+			VideoActivity.this::onMessageReceived;
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -372,14 +367,14 @@ public class VideoActivity extends YouTubeFailureRecoveryActivity {
 
 	private void postPlaybackStateUpdate() {
 		if (mPlayer != null) {
-			BroadcastMessage playbackState = new BroadcastMessage(mPlayer.isPlaying() ? MessageType.COMMAND_PLAY :
-					MessageType.COMMAND_PAUSE, null);
+			BroadcastMessage playbackState = new BroadcastMessage(
+					mPlayer.isPlaying() ? MessageType.COMMAND_PLAY : MessageType.COMMAND_PAUSE, null);
 			playbackState.setIntExtra(mPlayer.getCurrentTimeMillis());
 			sendMessage(playbackState);
 		}
 	}
 
-	private Runnable mStateUpdateRunnable = new Runnable() {
+	private final Runnable mStateUpdateRunnable = new Runnable() {
 		@Override
 		public void run() {
 			postPlaybackStateUpdate();

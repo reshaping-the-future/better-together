@@ -68,7 +68,7 @@ public class PlaylistActivity extends BasePluginActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("mCurrentPlaylist", mCurrentPlaylist);
 		super.onSaveInstanceState(outState);
 	}

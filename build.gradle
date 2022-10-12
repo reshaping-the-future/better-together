@@ -1,23 +1,38 @@
 buildscript {
 	ext {
 		// these are global so that the app and base plugins all have the same version code and track the same API version number
-		appVersionCode = 6
+		appVersionCode = 7
 		appAndAPIVersionName = '1.0.3'
 	}
 	repositories {
-		jcenter()
 		google()
+		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.5.3'
+		classpath 'com.android.tools.build:gradle:7.3.0'
 	}
 }
 
 allprojects {
 	repositories {
-		jcenter()
 		google()
+		mavenCentral()
+
+		// TODO: migrate Better Together API to, e.g., Maven Central now that BinTray has ceased to exist
+		jcenter() {
+			content {
+				includeModule('ac.robinson.bettertogether', 'api')
+				includeModule('com.amitshekhar.android', 'android-networking')
+			}
+		}
 	}
+
+	// // enable to show compiler deprecation warnings
+	// gradle.projectsEvaluated {
+	// 	tasks.withType(JavaCompile) {
+	// 		options.compilerArgs << "-Xlint:deprecation"
+	// 	}
+	// }
 }
 
 task clean(type: Delete) {

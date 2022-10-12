@@ -77,8 +77,8 @@ class HotspotManagerServiceCommunicator {
 					break;
 
 				default:
-					mCommunicator.mCallback.onSystemMessageReceived(msg.what, msg.getData()
-							.getString(PluginIntent.KEY_SERVICE_MESSAGE));
+					mCommunicator.mCallback.onSystemMessageReceived(msg.what,
+							msg.getData().getString(PluginIntent.KEY_SERVICE_MESSAGE));
 					break;
 			}
 		}

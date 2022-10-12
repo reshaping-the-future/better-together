@@ -66,7 +66,7 @@ public class CategoryActivity extends BaseItemActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putInt("mCurrentCategory", mCurrentCategory);
 		super.onSaveInstanceState(outState);
 	}

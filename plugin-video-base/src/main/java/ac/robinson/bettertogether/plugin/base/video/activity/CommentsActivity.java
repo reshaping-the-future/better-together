@@ -17,6 +17,7 @@
 package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -78,7 +79,7 @@ public class CommentsActivity extends BasePluginActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("mCurrentComments", mCurrentComments);
 		super.onSaveInstanceState(outState);
 	}
@@ -156,7 +157,11 @@ public class CommentsActivity extends BasePluginActivity {
 
 			YouTubeCommentItem currentComment = mCommentsList.get(position);
 			commentHolder.mAuthor.setText(currentComment.mAuthor);
-			commentHolder.mComment.setText(Html.fromHtml(currentComment.mComment));
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				commentHolder.mComment.setText(Html.fromHtml(currentComment.mComment, Html.FROM_HTML_MODE_LEGACY));
+			} else {
+				commentHolder.mComment.setText(Html.fromHtml(currentComment.mComment));
+			}
 			return currentView;
 		}
 	}

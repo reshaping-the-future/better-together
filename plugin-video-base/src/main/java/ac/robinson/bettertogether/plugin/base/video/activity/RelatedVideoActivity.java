@@ -68,7 +68,7 @@ public class RelatedVideoActivity extends BasePluginActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("mCurrentVideos", mCurrentVideos);
 		super.onSaveInstanceState(outState);
 	}

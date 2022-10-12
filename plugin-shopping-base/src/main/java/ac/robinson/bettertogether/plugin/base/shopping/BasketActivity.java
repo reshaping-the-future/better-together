@@ -47,7 +47,7 @@ public class BasketActivity extends BaseShoppingActivity {
 	private BasketItemsAdapter mBasketItemsViewAdapter;
 
 	private final LinkedList<Integer> mBasketItems = new LinkedList<>();
-	private LinkedList<Integer> mTouchedItems = new LinkedList<>();
+	private final LinkedList<Integer> mTouchedItems = new LinkedList<>();
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class BasketActivity extends BaseShoppingActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("mBasketItems", TextUtils.join(",", mBasketItems));
 		outState.putString("mTouchedItems", TextUtils.join(",", mTouchedItems));
 		super.onSaveInstanceState(outState);
@@ -147,6 +147,7 @@ public class BasketActivity extends BaseShoppingActivity {
 	}
 
 	private class BasketItemsAdapter extends RecyclerView.Adapter<BasketItemsAdapter.BasketViewHolder> {
+		@NonNull
 		@Override
 		public BasketViewHolder onCreateViewHolder(ViewGroup parent, int position) {
 			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_basket, parent, false);

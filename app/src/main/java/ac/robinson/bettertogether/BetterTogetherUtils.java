@@ -38,7 +38,7 @@ import androidx.annotation.Nullable;
 
 public class BetterTogetherUtils {
 	private static final String RANDOM_DICTIONARY = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	private static SecureRandom SECURE_RANDOM = new SecureRandom();
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 	public static String getRandomString(int length) {
 		StringBuilder sb = new StringBuilder(length);

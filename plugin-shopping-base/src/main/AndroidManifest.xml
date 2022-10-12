@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 The Better Together Toolkit
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<manifest package="ac.robinson.bettertogether.plugin.base.shopping"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:tools="http://schemas.android.com/tools">
 
-	<uses-sdk tools:overrideLibrary="jp.wasabeef.recyclerview"/>
+	<uses-sdk tools:overrideLibrary="jp.wasabeef.recyclerview" />
 </manifest>

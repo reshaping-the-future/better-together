@@ -18,14 +18,12 @@ package ac.robinson.bettertogether.plugin.base.video.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import ac.robinson.bettertogether.api.BasePluginActivity;
 import ac.robinson.bettertogether.api.messaging.BroadcastMessage;
@@ -62,25 +60,22 @@ public class SearchActivity extends BasePluginActivity {
 		mProgressIndicator = findViewById(R.id.search_results_progress_indicator);
 		mSearchQuery = findViewById(R.id.search_query);
 
-		mSearchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					String query = mSearchQuery.getText().toString();
-					if (!TextUtils.isEmpty(query)) {
-						//mSearchQuery.clearFocus(); // so the keyboard is hidden TODO: doesn't work...
+		mSearchQuery.setOnEditorActionListener((v, actionId, event) -> {
+			if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+				String query = mSearchQuery.getText().toString();
+				if (!TextUtils.isEmpty(query)) {
+					//mSearchQuery.clearFocus(); // so the keyboard is hidden TODO: doesn't work...
 
-						mListView.setAdapter(null);
-						mProgressIndicator.setVisibility(View.VISIBLE);
+					mListView.setAdapter(null);
+					mProgressIndicator.setVisibility(View.VISIBLE);
 
-						BroadcastMessage jsonResult = new BroadcastMessage(MessageType.COMMAND_GET_SEARCH, query);
-						sendMessage(jsonResult);
-					}
-
-					return false; // false so that keyboard is hidden automatically
+					BroadcastMessage jsonResult = new BroadcastMessage(MessageType.COMMAND_GET_SEARCH, query);
+					sendMessage(jsonResult);
 				}
-				return false;
+
+				return false; // false so that keyboard is hidden automatically
 			}
+			return false;
 		});
 
 		if (savedInstanceState != null) {
@@ -92,7 +87,7 @@ public class SearchActivity extends BasePluginActivity {
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		outState.putString("mCurrentVideos", mCurrentVideos);
 		super.onSaveInstanceState(outState);
 	}

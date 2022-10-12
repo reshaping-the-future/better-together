@@ -85,8 +85,8 @@ public class ControlsActivity extends BasePluginActivity {
 		final int viewId = view.getId();
 		// can't use resource id switch statements in library modules
 		if (viewId == R.id.play_pause_button) {
-			BroadcastMessage playPauseMessage = new BroadcastMessage(mIsPlaying ? MessageType.COMMAND_PAUSE :
-					MessageType.COMMAND_PLAY, null);
+			BroadcastMessage playPauseMessage = new BroadcastMessage(
+					mIsPlaying ? MessageType.COMMAND_PAUSE : MessageType.COMMAND_PLAY, null);
 			sendMessage(playPauseMessage);
 		} else if (viewId == R.id.previous_button || viewId == R.id.next_button) {
 			BroadcastMessage skipMessage = new BroadcastMessage(MessageType.COMMAND_SKIP, null);

@@ -1,20 +1,19 @@
 apply plugin: 'com.android.library'
 
 android {
-	compileSdkVersion 28
+	namespace 'ac.robinson.bettertogether.plugin.base.video'
+	compileSdkVersion 32
 
 	defaultConfig {
 		minSdkVersion 14
-		targetSdkVersion 28
-		versionCode appVersionCode
-		versionName appAndAPIVersionName // app version tracks API version
+		targetSdkVersion 32
 		consumerProguardFiles 'proguard-rules.pro'
 		resConfigs 'en'
 	}
 }
 
 dependencies {
-	implementation 'androidx.appcompat:appcompat:1.1.0'
+	implementation 'androidx.appcompat:appcompat:1.5.1'
 
 	implementation 'com.amitshekhar.android:android-networking:1.0.2' // for http requests (built on OKHttp)
 
@@ -22,5 +21,10 @@ dependencies {
 	// implementation 'com.google.apis:google-api-services-youtube:v3-rev164-1.21.0'
 	implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
+	// TODO: migrate Better Together API to, e.g., Maven Central now that BinTray has ceased to exist
 	implementation "ac.robinson.bettertogether:api:$appAndAPIVersionName" // the Better Together communication API
+
+	// uncomment to instead import locally (if jcenter is unavailable and migration has not yet been actioned)
+	// - see also settings.gradle edits
+	// implementation project(path: ':better-together-api:api')
 }

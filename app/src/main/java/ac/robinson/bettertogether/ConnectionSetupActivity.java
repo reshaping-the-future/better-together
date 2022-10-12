@@ -17,10 +17,8 @@
 package ac.robinson.bettertogether;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -71,8 +69,25 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 
 	private static final String TAG = "ConnectionSetupActivity";
 
+	// it is near-impossible to keep up with the changing permissions and requirements on newer Android API levels
+	// - instead, just request all permissions at startup before initialising
+	static String[] API_31_REQUIRED_PERMISSIONS;
+	AlertDialog mAPI31PermissionDialog = null;
+
+	static {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+			API_31_REQUIRED_PERMISSIONS = new String[]{
+					Manifest.permission.BLUETOOTH_CONNECT,
+					Manifest.permission.BLUETOOTH_SCAN,
+					Manifest.permission.CAMERA,
+					Manifest.permission.ACCESS_COARSE_LOCATION
+			};
+		}
+	}
+
 	private static final int CAMERA_PERMISSION_RESULT = 101;
 	private static final int COARSE_LOCATION_PERMISSION_RESULT = 102;
+	private static final int BLUETOOTH_LOCATION_CAMERA_PERMISSION_RESULT = 103;
 	public static final String RECONNECT_EXISTING_HOTSPOT = "existing_hotspot";
 
 	// for scanning
@@ -117,6 +132,8 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 
 		if (isFinishing()) {
 			return;
+		} else if (bluetoothPermissionsGranted()) {
+			startService(new Intent(getBaseContext(), HotspotManagerService.class));
 		}
 
 		setContentView(R.layout.activity_connection_setup);
@@ -128,8 +145,8 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 
 		mPluginViewAdapter = new PluginAdapter(ConnectionSetupActivity.this, ConnectionSetupActivity.this);
 		mPluginView = findViewById(R.id.plugin_view);
-		mPluginView.setLayoutManager(new LinearLayoutManager(ConnectionSetupActivity.this, LinearLayoutManager.HORIZONTAL,
-				false));
+		mPluginView.setLayoutManager(
+				new LinearLayoutManager(ConnectionSetupActivity.this, LinearLayoutManager.HORIZONTAL, false));
 		mPluginView.setHasFixedSize(true);
 		mPluginView.setAdapter(mPluginViewAdapter);
 		new GravitySnapHelper(Gravity.START, false, mPluginViewAdapter).attachToRecyclerView(mPluginView);
@@ -232,8 +249,8 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 			Log.d(TAG, "Plugin clicked: " + plugin.getRawPluginLabel());
 			ConnectionOptions connectionOptions = new ConnectionOptions();
 			connectionOptions.mName = ConnectionOptions.formatHotspotName(ConnectionOptions.DEFAULT_HOTSPOT_NAME_FORMAT,
-					getString(R.string.app_name_short), BetterTogetherUtils
-					.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE));
+					getString(R.string.app_name_short),
+					BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE));
 			connectionOptions.mPassword = BetterTogetherUtils.getRandomString(HotspotManagerService.MESSAGE_ID_SIZE);
 			connectionOptions.mPluginPackage = plugin.getPackageName();
 			setHotspotUrl(connectionOptions.getHotspotUrl());
@@ -373,7 +390,7 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 		}
 	}
 
-	private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
+	private final BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
 		@Override
 		public void barcodeResult(BarcodeResult rawResult) {
 			if (rawResult.getText() != null) {
@@ -393,6 +410,50 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 		}
 	};
 
+	// after API 30, we need to handle on-demand Bluetooth permissions requests
+	private boolean bluetoothPermissionsGranted() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+			return true;
+		}
+
+		mHasRequestedCameraPermission = true; // try to avoid repeated prompts
+
+		boolean permissionRequired = false;
+		boolean rationaleRequired = false;
+		for (String permission : API_31_REQUIRED_PERMISSIONS) {
+			if (ContextCompat.checkSelfPermission(ConnectionSetupActivity.this, permission) !=
+					PackageManager.PERMISSION_GRANTED) {
+				permissionRequired = true;
+			}
+			if (ActivityCompat.shouldShowRequestPermissionRationale(ConnectionSetupActivity.this, permission)) {
+				rationaleRequired = true;
+			}
+		}
+
+		if (permissionRequired) {
+			if (rationaleRequired) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
+				builder.setTitle(R.string.title_bluetooth_location_camera_access);
+				builder.setMessage(R.string.hint_enable_bluetooth_location_camera_access);
+				builder.setPositiveButton(R.string.hint_ask_again_permissions,
+						(dialog, which) -> ActivityCompat.requestPermissions(ConnectionSetupActivity.this,
+								API_31_REQUIRED_PERMISSIONS, BLUETOOTH_LOCATION_CAMERA_PERMISSION_RESULT));
+				builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+					Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_bluetooth_location_camera,
+							Toast.LENGTH_LONG).show();
+					finish();
+				});
+				builder.show();
+			} else {
+				ActivityCompat.requestPermissions(ConnectionSetupActivity.this, API_31_REQUIRED_PERMISSIONS,
+						BLUETOOTH_LOCATION_CAMERA_PERMISSION_RESULT);
+			}
+			return false;
+		}
+
+		return true;
+	}
+
 	// after API 23, we need to handle on-demand permissions requests
 	// the scanner library handles this, but not very well (exits on failure), so we do it ourselves
 	private boolean cameraPermissionGranted() {
@@ -407,21 +468,13 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 					AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
 					builder.setTitle(R.string.title_camera_access);
 					builder.setMessage(R.string.hint_enable_camera_access);
-					builder.setPositiveButton(R.string.hint_ask_again_permissions, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							ActivityCompat.requestPermissions(ConnectionSetupActivity.this, new String[]{
+					builder.setPositiveButton(R.string.hint_ask_again_permissions,
+							(dialog, which) -> ActivityCompat.requestPermissions(ConnectionSetupActivity.this, new String[]{
 									Manifest.permission.CAMERA
-							}, CAMERA_PERMISSION_RESULT);
-						}
-					});
-					builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_camera, Toast.LENGTH_LONG)
-									.show();
-							restartCaptureManager(); // reset capture UI and try again
-						}
+							}, CAMERA_PERMISSION_RESULT));
+					builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+						Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_camera, Toast.LENGTH_LONG).show();
+						restartCaptureManager(); // reset capture UI and try again
 					});
 					builder.show();
 				} else {
@@ -444,20 +497,13 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 				AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
 				builder.setTitle(R.string.title_coarse_location_access);
 				builder.setMessage(R.string.hint_enable_coarse_location_access);
-				builder.setPositiveButton(R.string.hint_ask_again_permissions, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						ActivityCompat.requestPermissions(ConnectionSetupActivity.this, new String[]{
+				builder.setPositiveButton(R.string.hint_ask_again_permissions,
+						(dialog, which) -> ActivityCompat.requestPermissions(ConnectionSetupActivity.this, new String[]{
 								Manifest.permission.ACCESS_COARSE_LOCATION
-						}, COARSE_LOCATION_PERMISSION_RESULT);
-					}
-				});
-				builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location, Toast.LENGTH_LONG).show();
-						restartCaptureManager(); // reset capture UI and try again
-					}
+						}, COARSE_LOCATION_PERMISSION_RESULT));
+				builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+					Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location, Toast.LENGTH_LONG).show();
+					createClient();
 				});
 				builder.show();
 			} else {
@@ -489,34 +535,27 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 			AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
 			builder.setTitle(R.string.title_settings_access);
 			builder.setMessage(R.string.hint_enable_settings_access);
-			builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					// note: dismiss rather than cancel so we always take this action (pos or neg result)
-					if (checkSettingsAccess()) {
-						if (mConnectionMode == ConnectionMode.CONNECTION_INITIATED_HOTSPOT) {
-							createHotspot();
-							return;
-						}
+			builder.setOnDismissListener(dialog -> {
+				// note: dismiss rather than cancel so we always take this action (pos or neg result)
+				if (checkSettingsAccess()) {
+					if (mConnectionMode == ConnectionMode.CONNECTION_INITIATED_HOTSPOT) {
+						createHotspot();
+						return;
 					}
-					mConnectionMode = ConnectionMode.SCANNING;
-					setupDefaultUI();
 				}
+				mConnectionMode = ConnectionMode.SCANNING;
+				setupDefaultUI();
 			});
-			builder.setPositiveButton(R.string.hint_edit_settings_access, new DialogInterface.OnClickListener() {
-				@TargetApi(Build.VERSION_CODES.M)
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					try {
-						Intent settingsIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-						settingsIntent.setData(Uri.parse("package:" + PluginIntent.HOST_PACKAGE));
-						startActivity(settingsIntent);
-					} catch (ActivityNotFoundException e) {
-						Toast.makeText(ConnectionSetupActivity.this, R.string.error_editing_settings, Toast.LENGTH_LONG).show();
-						// TODO: reset ui?
-					}
-					dialog.dismiss();
+			builder.setPositiveButton(R.string.hint_edit_settings_access, (dialog, which) -> {
+				try {
+					Intent settingsIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+					settingsIntent.setData(Uri.parse("package:" + PluginIntent.HOST_PACKAGE));
+					startActivity(settingsIntent);
+				} catch (ActivityNotFoundException e) {
+					Toast.makeText(ConnectionSetupActivity.this, R.string.error_editing_settings, Toast.LENGTH_LONG).show();
+					// TODO: reset ui?
 				}
+				dialog.dismiss();
 			});
 			builder.setNeutralButton(R.string.button_done, null);
 			builder.show();
@@ -527,77 +566,109 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		switch (requestCode) {
 			case CAMERA_PERMISSION_RESULT:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				if (ContextCompat.checkSelfPermission(ConnectionSetupActivity.this, Manifest.permission.CAMERA) ==
+						PackageManager.PERMISSION_GRANTED) {
 					restartCaptureManager();
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
 					builder.setTitle(R.string.title_camera_access);
 					builder.setMessage(R.string.hint_enable_camera_access);
-					builder.setPositiveButton(R.string.hint_edit_permissions, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent();
-							intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-							intent.setData(Uri.fromParts("package", ConnectionSetupActivity.this.getPackageName(), null));
-							try {
-								startActivity(intent);
-							} catch (ActivityNotFoundException e) {
-								// we've tried everything by this point!
-								Log.d(TAG, "Camera permission denied and request failed - will not be able to scan codes");
-								Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_camera, Toast.LENGTH_LONG)
-										.show();
-							}
-							restartCaptureManager();
-						}
-					});
-					builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location, Toast.LENGTH_LONG)
+					builder.setPositiveButton(R.string.hint_edit_permissions, (dialog, which) -> {
+						Intent intent = new Intent();
+						intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+						intent.setData(Uri.fromParts("package", ConnectionSetupActivity.this.getPackageName(), null));
+						try {
+							startActivity(intent);
+						} catch (ActivityNotFoundException e) {
+							// we've tried everything by this point!
+							Log.d(TAG, "Camera permission denied and request failed - will not be able to scan codes");
+							Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_camera, Toast.LENGTH_LONG)
 									.show();
-							restartCaptureManager(); // reset capture UI and try again
 						}
+						restartCaptureManager();
+					});
+					builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+						Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location, Toast.LENGTH_LONG).show();
+						restartCaptureManager(); // reset capture UI and try again
 					});
 					builder.show();
 				}
 				break;
 
 			case COARSE_LOCATION_PERMISSION_RESULT:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				if (ContextCompat.checkSelfPermission(ConnectionSetupActivity.this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) ==
+						PackageManager.PERMISSION_GRANTED) {
 					createClient();
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
 					builder.setTitle(R.string.title_coarse_location_access);
 					builder.setMessage(R.string.hint_enable_coarse_location_access);
-					builder.setPositiveButton(R.string.hint_edit_permissions, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent();
-							intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-							intent.setData(Uri.fromParts("package", ConnectionSetupActivity.this.getPackageName(), null));
-							try {
-								startActivity(intent);
-							} catch (ActivityNotFoundException e) {
-								// we've tried everything by this point!
-								Log.d(TAG, "Coarse location permission denied and request failed - will not be able to connect");
-								Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location,
-										Toast.LENGTH_LONG)
-										.show();
-							}
-							restartCaptureManager();
-						}
-					});
-					builder.setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
+					builder.setPositiveButton(R.string.hint_edit_permissions, (dialog, which) -> {
+						Intent intent = new Intent();
+						intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+						intent.setData(Uri.fromParts("package", ConnectionSetupActivity.this.getPackageName(), null));
+						try {
+							startActivity(intent);
+						} catch (ActivityNotFoundException e) {
+							// we've tried everything by this point!
+							Log.d(TAG, "Coarse location permission denied and request failed - will not be able to connect");
 							Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location, Toast.LENGTH_LONG)
 									.show();
-							restartCaptureManager(); // reset capture UI and try again
 						}
+						restartCaptureManager();
+					});
+					builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+						Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_location, Toast.LENGTH_LONG).show();
+						restartCaptureManager(); // reset capture UI and try again
 					});
 					builder.show();
+				}
+				break;
+
+			case BLUETOOTH_LOCATION_CAMERA_PERMISSION_RESULT:
+				boolean permissionStillMissing = false;
+				for (String permission : API_31_REQUIRED_PERMISSIONS) {
+					if (ContextCompat.checkSelfPermission(ConnectionSetupActivity.this, permission) !=
+							PackageManager.PERMISSION_GRANTED) {
+						permissionStillMissing = true;
+					}
+				}
+
+				if (mAPI31PermissionDialog != null) {
+					mAPI31PermissionDialog.dismiss();
+				}
+				if (!permissionStillMissing) {
+					startService(new Intent(getBaseContext(), HotspotManagerService.class));
+					restartCaptureManager();
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionSetupActivity.this);
+					builder.setTitle(R.string.title_bluetooth_location_camera_access);
+					builder.setMessage(R.string.hint_enable_bluetooth_location_camera_access);
+					builder.setPositiveButton(R.string.hint_edit_permissions, (dialog, which) -> {
+						Intent intent = new Intent();
+						intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+						intent.setData(Uri.fromParts("package", ConnectionSetupActivity.this.getPackageName(), null));
+						try {
+							startActivity(intent);
+						} catch (ActivityNotFoundException e) {
+							// we've tried everything by this point!
+							Log.d(TAG, "Bluetooth/camera/location permission denied and request failed - will not be able to " +
+									"connect");
+							Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_bluetooth_location_camera,
+									Toast.LENGTH_LONG).show();
+						}
+						finish();
+					});
+					builder.setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+						Toast.makeText(ConnectionSetupActivity.this, R.string.error_accessing_bluetooth_location_camera,
+								Toast.LENGTH_LONG).show();
+						finish();
+					});
+					mAPI31PermissionDialog = builder.show();
 				}
 				break;
 
@@ -642,7 +713,7 @@ public class ConnectionSetupActivity extends BaseHotspotActivity implements Plug
 
 	private static class CustomCaptureManager extends CaptureManager {
 
-		private BarcodeCallback mCallback;
+		private final BarcodeCallback mCallback;
 
 		CustomCaptureManager(Activity activity, CompoundBarcodeView barcodeView, BarcodeCallback callback) {
 			super(activity, barcodeView);

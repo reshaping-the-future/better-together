@@ -39,15 +39,15 @@ class WifiUtils {
 	}
 
 	// returns one of WifiManager.WIFI_AP_STATE_*
-	static int getWifiHotspotState(WifiManager mWifiManager) throws NoSuchMethodException, InvocationTargetException,
-			IllegalAccessException {
+	static int getWifiHotspotState(WifiManager mWifiManager)
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Method getWifiApConfiguration = mWifiManager.getClass().getMethod("getWifiApState");
 		return (Integer) getWifiApConfiguration.invoke(mWifiManager);
 	}
 
 	// get the current hotspot configuration
-	static WifiConfiguration getWifiHotspotConfiguration(WifiManager mWifiManager) throws NoSuchMethodException,
-			InvocationTargetException, IllegalAccessException {
+	static WifiConfiguration getWifiHotspotConfiguration(WifiManager mWifiManager)
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Method getWifiApConfiguration = mWifiManager.getClass().getMethod("getWifiApConfiguration");
 		return (WifiConfiguration) getWifiApConfiguration.invoke(mWifiManager);
 	}
@@ -61,7 +61,8 @@ class WifiUtils {
 	}
 
 	// set the hotspot configuration without changing its on/off status
-	static void setWifiHotspotConfiguration(WifiManager mWifiManager, @NonNull WifiConfiguration wifiConfiguration) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	static void setWifiHotspotConfiguration(WifiManager mWifiManager, @NonNull WifiConfiguration wifiConfiguration)
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Method setWifiApConfiguration = mWifiManager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
 		setWifiApConfiguration.invoke(mWifiManager, wifiConfiguration);
 	}
@@ -76,7 +77,8 @@ class WifiUtils {
 		return false;
 	}
 
-	static void setHotspotEnabled(WifiManager mWifiManager, WifiConfiguration wifiConfiguration, boolean enabled) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	static void setHotspotEnabled(WifiManager mWifiManager, WifiConfiguration wifiConfiguration, boolean enabled)
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// TODO: wait for the hotspot to be enabled, then send clients a confirmation
 		// TODO: do we need to wait for Wifi to finish being disabled before enabling the hotspot?
 		mWifiManager.setWifiEnabled(false); // some devices require this to be called before enabling the hotspot

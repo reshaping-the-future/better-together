@@ -104,8 +104,8 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 		setSupportActionBar(toolbar);
 
 		mPluginActivityView = findViewById(R.id.plugin_activities_view);
-		mPluginActivityView.setLayoutManager(new GridLayoutManager(PluginHostActivity.this, 2, GridLayoutManager.VERTICAL,
-				false));
+		mPluginActivityView.setLayoutManager(
+				new GridLayoutManager(PluginHostActivity.this, 2, GridLayoutManager.VERTICAL, false));
 		mPluginActivityView.setHasFixedSize(true);
 		mPluginActivityView.setAdapter(mPluginActivityViewAdapter);
 		new GravitySnapHelper(Gravity.START, false, mPluginActivityViewAdapter).attachToRecyclerView(mPluginActivityView);
@@ -191,8 +191,8 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					try {
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
-								PluginIntent.MARKET_PACKAGE_QUERY + currentPluginPackage));
+						Intent intent = new Intent(Intent.ACTION_VIEW,
+								Uri.parse(PluginIntent.MARKET_PACKAGE_QUERY + currentPluginPackage));
 						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
 					} catch (Exception e) {
@@ -216,12 +216,12 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 				toolbar.setTitleTextColor(resources.getColor(R.color.bettertogether_text));
 			}
 		} else {
-			mFooterTextOpen.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme,
-					R.attr.colorPrimary));
-			mFooterTextClosed.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme,
-					R.attr.colorPrimary));
-			mPluginView.setBackgroundColor(BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme,
-					R.attr.colorButtonNormal));
+			mFooterTextOpen.setBackgroundColor(
+					BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme, R.attr.colorPrimary));
+			mFooterTextClosed.setBackgroundColor(
+					BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme, R.attr.colorPrimary));
+			mPluginView.setBackgroundColor(
+					BetterTogetherUtils.getThemeColour(PluginHostActivity.this, pluginTheme, R.attr.colorButtonNormal));
 		}
 	}
 
@@ -305,7 +305,7 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 					public void onAnimationEnd(Animation animation) {
 						RelativeLayout.LayoutParams lp =
 								new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-										RelativeLayout.LayoutParams.MATCH_PARENT);
+								RelativeLayout.LayoutParams.MATCH_PARENT);
 						lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
 						lp.addRule(RelativeLayout.ABOVE, R.id.footer);
 						mPluginActivityView.setLayoutParams(lp);
@@ -330,7 +330,7 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 						mFooter.setVisibility(View.GONE);
 						RelativeLayout.LayoutParams lp =
 								new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-										RelativeLayout.LayoutParams.MATCH_PARENT);
+								RelativeLayout.LayoutParams.MATCH_PARENT);
 						lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
 						lp.addRule(RelativeLayout.ABOVE, R.id.footer_text_closed);
 						mPluginActivityView.setLayoutParams(lp);
@@ -368,8 +368,8 @@ public class PluginHostActivity extends BaseHotspotActivity implements PluginCli
 		@NonNull
 		@Override
 		public PluginActivityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-			return new PluginActivityViewHolder(LayoutInflater.from(parent.getContext())
-					.inflate(R.layout.list_activities, parent, false));
+			return new PluginActivityViewHolder(
+					LayoutInflater.from(parent.getContext()).inflate(R.layout.list_activities, parent, false));
 		}
 
 		@Override

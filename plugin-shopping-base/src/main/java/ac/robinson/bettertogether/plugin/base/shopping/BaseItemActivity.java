@@ -33,7 +33,7 @@ public abstract class BaseItemActivity extends BaseShoppingActivity implements S
 	private static final int SENSOR_READINGS_REQUIRED_FOR_ROTATION = 2; // how many readings required to count as a rotation
 	private SensorManager mSensorManager;
 	private int mRotationSensorReadingCount = 0;
-	private float[] mRotationMatrix = new float[9];
+	private final float[] mRotationMatrix = new float[9];
 	private boolean mHasFlipped = false;
 
 	@Override

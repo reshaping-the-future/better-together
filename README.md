@@ -1,5 +1,5 @@
 # Better Together
-![Setting up Better Together connections](https://lh3.googleusercontent.com/SXNCa20gV-vtXCQxKjE5f3xeyZD91O4XeRKcWxXXeMd1Fz9eEPbgAXoleKrTRTrJZaTc=w276 "Setting up Better Together connections") ![Better Together video plugin](https://lh3.googleusercontent.com/5KMgNkDFQxVwAHQeJMRF_v6zMRiTdVyKbsxRTZsyL6nKEZZkmIQc2lNvFRT60y51wr0=w276 "Better Together video plugin") ![Better Together shopping plugin](https://lh3.googleusercontent.com/o_70DJJvN3xUBl4kDkNJchyUA78X37zvFmhok2c14kcqdUI6cM3jwMAFe1b9cqRSpQ=w276 "Better Together shopping plugin")
+![Setting up Better Together connections](https://lh3.googleusercontent.com/SXNCa20gV-vtXCQxKjE5f3xeyZD91O4XeRKcWxXXeMd1Fz9eEPbgAXoleKrTRTrJZaTc=w273 "Setting up Better Together connections") ![Better Together video plugin](https://lh3.googleusercontent.com/5KMgNkDFQxVwAHQeJMRF_v6zMRiTdVyKbsxRTZsyL6nKEZZkmIQc2lNvFRT60y51wr0=w273 "Better Together video plugin") ![Better Together shopping plugin](https://lh3.googleusercontent.com/o_70DJJvN3xUBl4kDkNJchyUA78X37zvFmhok2c14kcqdUI6cM3jwMAFe1b9cqRSpQ=w273 "Better Together shopping plugin")
 
 Better Together is a platform for flexibly connecting multiple smartphones together to separate common tasks. The simple framework helps you connect phones together to share, help and work with other people.
 

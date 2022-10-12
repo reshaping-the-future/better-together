@@ -16,6 +16,7 @@
 
 package ac.robinson.bettertogether.hotspot;
 
+import android.Manifest;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -23,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -60,6 +62,7 @@ import ac.robinson.bettertogether.event.ServerErrorEvent;
 import ac.robinson.bettertogether.event.ServerMessageErrorEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class HotspotManagerService extends Service {
@@ -153,6 +156,15 @@ public class HotspotManagerService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		if (!mIsBound) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+				// Android 12 has new Bluetooth permissions; to avoid significant migration effort, we ask at startup or exit
+				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) !=
+						PackageManager.PERMISSION_GRANTED) {
+					Log.w(TAG, "Unable to bind HotspotManagerService - BLUETOOTH_CONNECT permission has not been granted");
+					return null;
+				}
+			}
+
 			//TODO: check mBluetoothAdapter not null and/or check bluetooth is available - BluetoothUtils.isBluetoothAvailable()
 			mBluetoothAdapter = BluetoothUtils.getBluetoothAdapter(HotspotManagerService.this);
 			mOriginalBluetoothStatus = mBluetoothAdapter.isEnabled();
@@ -227,15 +239,17 @@ public class HotspotManagerService extends Service {
 	@Override
 	public void onDestroy() {
 		// remove all event listeners
-		EventBus.getDefault().unregister(HotspotManagerService.this);
-		LocalBroadcastManager.getInstance(HotspotManagerService.this).unregisterReceiver(mLocalBroadcastReceiver);
-		unregisterReceiver(mGlobalBroadcastReceiver);
-		mMessageThread.quit(); // (we don't need quitSafely() as messages don't need to be delivered)
+		if (mIsBound) {
+			EventBus.getDefault().unregister(HotspotManagerService.this);
+			LocalBroadcastManager.getInstance(HotspotManagerService.this).unregisterReceiver(mLocalBroadcastReceiver);
+			unregisterReceiver(mGlobalBroadcastReceiver);
+			mMessageThread.quit(); // (we don't need quitSafely() as messages don't need to be delivered)
 
-		destroyAllConnections();
+			destroyAllConnections();
 
-		restoreOriginalWifiState();
-		restoreOriginalBluetoothState();
+			restoreOriginalWifiState();
+			restoreOriginalBluetoothState();
+		}
 	}
 
 	private void restoreOriginalWifiState() {
@@ -295,8 +309,8 @@ public class HotspotManagerService extends Service {
 		new Thread(mBluetoothServer).start();
 	}
 
-	private void configureAndStartWifiHotspot(ConnectionOptions connectionOptions) throws NoSuchMethodException,
-			InvocationTargetException, IllegalAccessException {
+	private void configureAndStartWifiHotspot(ConnectionOptions connectionOptions)
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		WifiConfiguration wifiConfiguration = null;
 		try {
 			// see: https://stackoverflow.com/questions/2140133/
@@ -315,8 +329,8 @@ public class HotspotManagerService extends Service {
 	}
 
 	// TODO: Wifi configuration seems to be ignored when turning off - does this matter?
-	private void initialiseHotspots(@Nullable ConnectionOptions connectionOptions) throws NoSuchMethodException,
-			InvocationTargetException, IllegalAccessException {
+	private void initialiseHotspots(@Nullable ConnectionOptions connectionOptions)
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
 		mHotspotMode = true;
 
@@ -374,6 +388,10 @@ public class HotspotManagerService extends Service {
 	}
 
 	private void connectWifiHotspot(@NonNull ConnectionOptions options) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			Log.w(TAG, "Skipping Wifi connection setup - not permitted after Android 10 (Q)");
+			return;
+		}
 		Log.d(TAG, "Attempting connection via Wifi");
 		switch (mWifiManager.getWifiState()) {
 			case WifiManager.WIFI_STATE_ENABLED:
@@ -421,8 +439,8 @@ public class HotspotManagerService extends Service {
 		// set up new network - *must* be surrounded by " (see: https://stackoverflow.com/questions/2140133/)
 		Log.d(TAG, "Connecting to Wifi network " + connectionOptions.mName);
 		WifiConfiguration wifiConfiguration = new WifiConfiguration();
-		WifiUtils.setConfigurationAttributes(wifiConfiguration,
-				"\"" + connectionOptions.mName + "\"", "\"" + connectionOptions.mPassword + "\"");
+		WifiUtils.setConfigurationAttributes(wifiConfiguration, "\"" + connectionOptions.mName + "\"",
+				"\"" + connectionOptions.mPassword + "\"");
 
 		int savedNetworkId = WifiUtils.getWifiNetworkId(mWifiManager, wifiConfiguration.SSID);
 		if (savedNetworkId >= 0) {
@@ -489,9 +507,10 @@ public class HotspotManagerService extends Service {
 		Log.d(TAG, "Bluetooth client connection started");
 	}
 
-	private BroadcastReceiver mGlobalBroadcastReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver mGlobalBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			Log.d(TAG, "Received global broadcast:" + intent.getAction());
 			switch (intent.getAction()) {
 				case HOTSPOT_STATE_FILTER: // see: http://stackoverflow.com/a/14681207
 					int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
@@ -695,7 +714,7 @@ public class HotspotManagerService extends Service {
 		}
 
 		@Override
-		public void handleMessage(Message msg) {
+		public void handleMessage(@NonNull Message msg) {
 			HotspotManagerService mService = mServiceReference.get();
 			if (mService == null) {
 				// TODO: anything to do here?
@@ -803,7 +822,7 @@ public class HotspotManagerService extends Service {
 		}
 	}
 
-	private BroadcastReceiver mLocalBroadcastReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver mLocalBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO: source is only necessary for internal plugins - remove later?
